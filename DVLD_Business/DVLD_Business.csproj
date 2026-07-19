@@ -49,6 +49,8 @@
     <Compile Include="People\clsCountry.cs" />
     <Compile Include="People\clsPerson.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\clsTestAppointment.cs" />
+    <Compile Include="Tests\clsTest.cs" />
     <Compile Include="Tests\clsTestTypescs.cs" />
     <Compile Include="Users\clsUser.cs" />
   </ItemGroup>
