@@ -132,24 +132,23 @@ namespace DVLD_DataAccess.Applications
             return isAdded;
         }
 
-        public static bool UpdateLocalDrivingLicenseApplication(int LocalDrivingLicenseApplicationID,
-            int ApplicationID, int LicenseClassID)
+        public static bool UpdateLocalDrivingLicenseApplication(int LocalDrivingLicenseApplicationID, int LicenseClassID)
         {
             bool isUpdated = false;
             SqlConnection connection = new SqlConnection(connectionstring);
+
+            // ONLY update the LicenseClassID! ApplicationID is strictly immutable.
             string query = $"UPDATE {clsLocalAppAttributes.TableName} " +
-                           $"SET {clsLocalAppAttributes.colApplicationId} = @ApplicationID, " +
-                           $"{clsLocalAppAttributes.colLicenseClassId} = @LicenseClassID " +
+                           $"SET {clsLocalAppAttributes.colLicenseClassId} = @LicenseClassID " +
                            $"WHERE {clsLocalAppAttributes.colLocalDrivingLicenseApplicationId} = @LocalDrivingLicenseApplicationID";
 
             SqlCommand command = new SqlCommand(query, connection);
-
             using (connection)
             {
                 using (command)
                 {
                     command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", LocalDrivingLicenseApplicationID);
-                    command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+               
                     command.Parameters.AddWithValue("@LicenseClassID", LicenseClassID);
 
                     try

@@ -16,7 +16,7 @@ public class LocalDrivingLicenseTestcs
         Assert.IsNotNull(Local, "The Licenses with the Application Id " + appId + " was not found");
         Console.WriteLine("The license with the id " + appId + " was found succesfully");
 
-        Console.WriteLine((clsApplicationDTO.enApplicationStatus)Local.ApplicationInfo.clsApplicationDTO.ApplicationStatus);
+        Console.WriteLine((clsApplicationDTO.enApplicationStatus)Local.ApplicationInfo.ApplicationDTO.ApplicationStatus);
 
 
     }
@@ -26,14 +26,14 @@ public class LocalDrivingLicenseTestcs
     {
 
         clsApplication baseApp = new clsApplication();
-        baseApp.clsApplicationDTO.ApplicantPersonID = 1; // Must be a valid Person ID in your DB
-        baseApp.clsApplicationDTO.ApplicationTypeID = 2; // renew
-        baseApp.clsApplicationDTO.CreatedByUserID = 1;   // Must be a valid User ID in your DB
-        baseApp.clsApplicationDTO.PaidFees = 15.00m;     // Match the fee for this application type
+        baseApp.ApplicationDTO.ApplicantPersonID = 1; // Must be a valid Person ID in your DB
+        baseApp.ApplicationDTO.ApplicationTypeID = 2; // renew
+        baseApp.ApplicationDTO.CreatedByUserID = 1;   // Must be a valid User ID in your DB
+        baseApp.ApplicationDTO.PaidFees = 15.00m;     // Match the fee for this application type
 
 
         bool baseSaved = baseApp.Save();
-        Assert.IsTrue(baseSaved, "Failed to create the required base application. Error: " + baseApp.clsApplicationDTO.LastValidationError);
+        Assert.IsTrue(baseSaved, "Failed to create the required base application. Error: " + baseApp.ApplicationDTO.LastValidationError);
 
         // 2. Instantiate the Local Driving License Application
         clsLocalDrivingLicensecs localApp = new clsLocalDrivingLicensecs();
@@ -105,7 +105,51 @@ public class LocalDrivingLicenseTestcs
         Console.WriteLine("Guard Clause successfully blocked data corruption attempt: " + app.LocalDrivingLicensecsDTO.LastValidationError);
     }
 
+    [TestMethod]
+    public void Test_UpdateLocalDrivingLicenseApplication_ShouldUpdateClassAndRecalculateTotalFees()
+    {
+       
+        int localAppId = 30; // Existing Local Application ID
+        int newLicenseClassId = 7; // Target new class ID (e.g., Heavy Vehicle)
 
+        // 1. Fetch existing local application record
+        clsLocalDrivingLicensecs localApp = clsLocalDrivingLicensecs.Find(localAppId);
+        Assert.IsNotNull(localApp, "Test Setup Fail: Local Driving License Application record not found.");
+
+        int baseAppId = localApp.LocalDrivingLicensecsDTO.ApplicationID;
+
+        // 2. Look up target class fee and base application type fee for expectation calculation
+        clsLicenseClass targetClass = clsLicenseClass.Find(newLicenseClassId);
+        Assert.IsNotNull(targetClass, "Test Setup Fail: Target license class not found.");
+
+        clsApplication OriginalApplicationBeforeTheUpdate = clsApplication.Find(baseAppId);
+        Assert.IsNotNull(OriginalApplicationBeforeTheUpdate, "Test Setup Fail: Base application record not found.");
+
+        clsApplicationTypes appType = clsApplicationTypes.Find(OriginalApplicationBeforeTheUpdate.ApplicationDTO.ApplicationTypeID);
+        Assert.IsNotNull(appType, "Test Setup Fail: Application type record not found.");
+
+        decimal expectedTotalFee = appType.DTO.ApplicationFees + targetClass.clsLicenseClassDTO.ClassFees;
+
+        // Act
+        localApp.LocalDrivingLicensecsDTO.LicenseClassId = newLicenseClassId;
+        bool isSaved = localApp.Save(); // Calls _UpdateLocalDrivingLicenseApplication internally
+
+        // Assert
+        Assert.IsTrue(isSaved, "Failed to save updated local driving license application. Error: " + localApp.LocalDrivingLicensecsDTO.LastValidationError);
+
+        // Verify Local Driving License Application record was updated in DB
+        clsLocalDrivingLicensecs updatedLocalApp = clsLocalDrivingLicensecs.Find(localAppId);
+        Assert.IsNotNull(updatedLocalApp, "Failed to fetch updated local application record.");
+        Assert.AreEqual(newLicenseClassId, updatedLocalApp.LocalDrivingLicensecsDTO.LicenseClassId, "LicenseClassID was not updated in the database.");
+
+        // Verify Base Application PaidFees was synchronized with sum of fees
+        clsApplication updatedBaseApp = clsApplication.Find(baseAppId);
+        Assert.IsNotNull(updatedBaseApp, "Failed to fetch updated base application record.");
+        Assert.AreEqual(expectedTotalFee, updatedBaseApp.ApplicationDTO.PaidFees, "PaidFees was not accurately updated to match ApplicationTypeFee + NewClassFee.");
+
+        Console.WriteLine($"Success: Local App ID {localAppId} updated to LicenseClassID {newLicenseClassId}.");
+        Console.WriteLine($"Success: Base App ID {baseAppId} PaidFees synchronized to {updatedBaseApp.ApplicationDTO.PaidFees:C}.");
+    }
     [TestMethod]
     public void Test5_GetAllRecords()
     {

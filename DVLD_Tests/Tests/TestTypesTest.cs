@@ -31,4 +31,18 @@ public class TestTypesTest
         }
 
     }
+    [TestMethod]
+    public void Test3_UpdateTestFees()
+    {
+
+        clsTestTypes UpdatedTest = clsTestTypes.Find(1);
+        decimal OldFees = UpdatedTest.clsTestTypesDTO.TestTypeFees;
+        UpdatedTest.clsTestTypesDTO.TestTypeFees = 15;
+
+
+      bool IsSaved=  UpdatedTest.Save();
+        Assert.IsTrue(IsSaved, "The New Updated Fees Were not updated");
+        Assert.AreNotEqual(OldFees,UpdatedTest.clsTestTypesDTO.TestTypeFees,"The Fees Were Not changed but the save worked");
+
+    }
 }

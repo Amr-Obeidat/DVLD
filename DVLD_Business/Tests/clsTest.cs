@@ -81,25 +81,21 @@ namespace DVLD_Business.Tests
 
             private bool _UpdateTest()
             {
-                return clsTestsDataAccess.UpdateTest(
-                    this.TestDTO.TestID,
-                    this.TestDTO.TestAppointmentID,
-                    this.TestDTO.TestResult,
-                    this.TestDTO.Notes,
-                    this.TestDTO.CreatedByUserID
-                );
+
+                return clsTestsDataAccess.UpdateTest(this.TestDTO.TestID, this.TestDTO.TestResult, this.TestDTO.Notes);
+
             }
 
             public bool Save()
             {
-                // 1. Sanity Security Gate
+              
                 if (this.TestDTO.TestAppointmentID <= 0 || this.TestDTO.CreatedByUserID <= 0)
                 {
                     this.TestDTO.LastValidationError = "Validation Fail: Required Test Appointment or User tracking associations are completely missing.";
                     return false;
                 }
 
-                // 2. Execution State Pipeline Control
+               
                 switch (this.TestDTO.Mode)
                 {
                     case clsTestDTO.enMode.AddNew:
@@ -115,11 +111,16 @@ namespace DVLD_Business.Tests
                         clsTest originalRecord = clsTest.Find(this.TestDTO.TestID);
                         if (originalRecord != null)
                         {
-                            // Guard Rule: The appointment relationship index pointer cannot be modified after compilation
+                            
                             if (originalRecord.TestDTO.TestAppointmentID != this.TestDTO.TestAppointmentID)
                             {
                                 this.TestDTO.LastValidationError = "Validation Fail: Structural alterations to the historical TestAppointmentID reference are strictly prohibited.";
                                 return false;
+                            }
+                            if (originalRecord.TestDTO.CreatedByUserID != this.TestDTO.CreatedByUserID)
+                            {
+                                this.TestDTO.LastValidationError = "Validation Fail: Modifying the evaluator UserID on an existing test record is prohibited.";
+                                return false; 
                             }
                         }
                         return _UpdateTest();

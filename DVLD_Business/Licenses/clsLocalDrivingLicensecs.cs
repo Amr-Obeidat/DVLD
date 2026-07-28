@@ -63,11 +63,11 @@ namespace DVLD_Business.Licenses
 
             if (isFound)
             {
-                // FIXED: Populate the safe DTO carrier instead of the wrapper class instance
+             
                 clsLocalDrivingLicensecsDTO FilledDto = new clsLocalDrivingLicensecsDTO
                 {
                     LocalDrivingLicenseApplicationID = LocalApplicationId,
-                    ApplicationID = ApplicationId, // FIXED: Correctly mapped foreign key tracking ID
+                    ApplicationID = ApplicationId, 
                     LicenseClassId = LicenseClassId
                 };
 
@@ -99,17 +99,48 @@ namespace DVLD_Business.Licenses
 
         private bool _UpdateLocalDrivingLicenseApplication()
         {
-            bool success = clsLocalDrivingLicenseApplicationDataAccess.UpdateLocalDrivingLicenseApplication(
+          
+            clsLicenseClass licenseClass = clsLicenseClass.Find(this.LocalDrivingLicensecsDTO.LicenseClassId);
+            if (licenseClass == null)
+            {
+                this.LocalDrivingLicensecsDTO.LastValidationError = "Error: Target license class was not found.";
+                return false;
+            }
+
+         
+            clsApplication baseApp = clsApplication.Find(this.LocalDrivingLicensecsDTO.ApplicationID);
+            if (baseApp == null)
+            {
+                this.LocalDrivingLicensecsDTO.LastValidationError = "Error: Linked base application record was not found.";
+                return false;
+            }
+
+
+            clsApplicationTypes appType = clsApplicationTypes.Find(baseApp.ApplicationDTO.ApplicationTypeID);
+            if (appType == null)
+            {
+                this.LocalDrivingLicensecsDTO.LastValidationError = "Error: Linked application type was not found.";
+                return false;
+            }
+
+           
+            decimal applicationTypeFee = appType.DTO.ApplicationFees;
+            decimal newClassFee = licenseClass.clsLicenseClassDTO.ClassFees;
+
+            baseApp.ApplicationDTO.PaidFees = applicationTypeFee + newClassFee;
+
+          
+            if (!baseApp.Save())
+            {
+                this.LocalDrivingLicensecsDTO.LastValidationError = "Error: Failed to update base application fees for the new license class.";
+                return false;
+            }
+
+
+            return clsLocalDrivingLicenseApplicationDataAccess.UpdateLocalDrivingLicenseApplication(
                 this.LocalDrivingLicensecsDTO.LocalDrivingLicenseApplicationID,
-                this.LocalDrivingLicensecsDTO.ApplicationID,
                 this.LocalDrivingLicensecsDTO.LicenseClassId
             );
-
-            if (!success)
-            {
-                this.LocalDrivingLicensecsDTO.LastValidationError = "Database Error: Failed to update local application properties.";
-            }
-            return success;
         }
 
         public static bool Delete(int LocalDrivingLicenseApplicationID)
@@ -124,53 +155,71 @@ namespace DVLD_Business.Licenses
 
         public bool Save()
         {
-            if (this.ApplicationInfo != null && this.ApplicationInfo.clsApplicationDTO.ApplicationID != this.LocalDrivingLicensecsDTO.ApplicationID)
+          // Sync Lazy-Loaded Composition Objects (Pointers)
+            if (this.LocalDrivingLicensecsDTO.ApplicationID > 0)
             {
-                // If they are in Update mode, this is a security violation! Let the code flow down to the Update guard clause to catch it.
-                // If they are in AddNew mode, we synchronize the pointer to match the forced ID change.
-                if (this.LocalDrivingLicensecsDTO.Mode == clsLocalDrivingLicensecsDTO.enMode.AddNew)
+                if (this.ApplicationInfo == null || this.ApplicationInfo.ApplicationDTO.ApplicationID != this.LocalDrivingLicensecsDTO.ApplicationID)
                 {
                     this.ApplicationInfo = clsApplication.Find(this.LocalDrivingLicensecsDTO.ApplicationID);
                 }
             }
-            else if (this.ApplicationInfo != null)
+
+            if (this.LocalDrivingLicensecsDTO.LicenseClassId > 0)
             {
-                // Smooth baseline assignment if they are perfectly in sync
-                this.LocalDrivingLicensecsDTO.ApplicationID = this.ApplicationInfo.clsApplicationDTO.ApplicationID;
+                if (this.LicenseClassInfo == null || this.LicenseClassInfo.clsLicenseClassDTO.LicenseClassID != this.LocalDrivingLicensecsDTO.LicenseClassId)
+                {
+                    this.LicenseClassInfo = clsLicenseClass.Find(this.LocalDrivingLicensecsDTO.LicenseClassId);
+                }
             }
 
-
-
-
-
-            if (this.LicenseClassInfo != null && this.LicenseClassInfo.clsLicenseClassDTO.LicenseClassID != this.LocalDrivingLicensecsDTO.LicenseClassId)
+        
+            if (this.LocalDrivingLicensecsDTO.ApplicationID <= 0)
             {
-                // If the DTO ID was changed manually in code  update our composition pointer
-                this.LicenseClassInfo = clsLicenseClass.Find(this.LocalDrivingLicensecsDTO.LicenseClassId);
-            }
-
-                if (this.LocalDrivingLicensecsDTO.ApplicationID <= 0 || this.LocalDrivingLicensecsDTO.LicenseClassId <= 0)
-            {
-                this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Base Application ID or License Class ID references are missing.";
+                this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Linked Base Application ID is missing or invalid.";
                 return false;
             }
 
+            if (this.LocalDrivingLicensecsDTO.LicenseClassId <= 0 || this.LicenseClassInfo == null)
+            {
+                this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Target License Class is invalid or does not exist.";
+                return false;
+            }
+
+            if (this.ApplicationInfo == null)
+            {
+                this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Linked Base Application record was not found.";
+                return false;
+            }
+
+           
             switch (this.LocalDrivingLicensecsDTO.Mode)
             {
                 case clsLocalDrivingLicensecsDTO.enMode.AddNew:
+
+
                     if (CheckIfBaseApplicationAlreadyLinked())
                     {
-                        this.LocalDrivingLicensecsDTO.LastValidationError = "Record Already Exists! This base application is already linked to a local driving license application.";
+                        this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: This base application is already linked to another local application.";
                         return false;
                     }
+
                     return _AddNewLocalDrivingLicenseApplication();
 
                 case clsLocalDrivingLicensecsDTO.enMode.Update:
+
+                    // Fetch original state to protect immutable relations
                     clsLocalDrivingLicensecs originalRecord = clsLocalDrivingLicensecs.Find(this.LocalDrivingLicensecsDTO.LocalDrivingLicenseApplicationID);
 
-                    if (originalRecord != null && originalRecord.LocalDrivingLicensecsDTO.ApplicationID != this.LocalDrivingLicensecsDTO.ApplicationID)
+                    if (originalRecord == null)
                     {
-                        this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Modifying the base ApplicationID link on an active record is strictly prohibited.";
+                        this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: The local driving license application record being updated no longer exists.";
+                        return false;
+                    }
+
+                    // Guard Rail: Prohibit re-linking to a different base ApplicationID
+                    if (originalRecord.LocalDrivingLicensecsDTO.ApplicationID != this.LocalDrivingLicensecsDTO.ApplicationID)
+                    {
+                        this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Modifying the base ApplicationID link on an existing record is strictly prohibited.";
                         return false;
                     }
 

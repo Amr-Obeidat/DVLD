@@ -92,59 +92,36 @@ namespace DVLD_Business.Drivers
             return (this.DriverDTO.DriverID != -1);
         }
 
-        private bool _UpdateDriver()
-        {
-            return clsDriverDataAccess.UpdateDriver(
-                this.DriverDTO.DriverID,
-                this.DriverDTO.PersonID,
-                this.DriverDTO.CreatedByUserID,
-                this.DriverDTO.CreatedDate
-            );
-        }
+      
+
 
         public bool Save()
         {
-       
-            if (this.PersonInfo != null && this.PersonInfo.PersonDTO.PersonID != this.DriverDTO.PersonID)
-            {
-               
-                {
-                    this.PersonInfo = clsPerson.Find(this.DriverDTO.PersonID);
-                }
-            }
-            else if (this.PersonInfo != null)
-            {
-             
-                this.DriverDTO.PersonID = this.PersonInfo.PersonDTO.PersonID;
-            }
-
-         
+          
             if (this.DriverDTO.PersonID <= 0 || this.DriverDTO.CreatedByUserID <= 0)
             {
-                this.DriverDTO.LastValidationError = "Validation Fail: Required structural Person or User reference values are missing.";
+                this.DriverDTO.LastValidationError = "Validation Fail: Valid PersonID and CreatedByUserID are required to create a Driver record.";
                 return false;
             }
 
             switch (this.DriverDTO.Mode)
             {
                 case clsDriverDTO.enMode.AddNew:
-                    // Security guard rule: A person can only be registered as a driver exactly once in our system
+
+                  
                     if (clsDriverDataAccess.DoesDriverExistByPersonID(this.DriverDTO.PersonID))
                     {
-                        this.DriverDTO.LastValidationError = "Record Already Exists! This person is already registered as a driver.";
+                        this.DriverDTO.LastValidationError = "Validation Fail: This person is already registered as a driver in the system.";
                         return false;
                     }
+
                     return _AddNewDriver();
 
                 case clsDriverDTO.enMode.Update:
-                    // Security guard rule: PersonID identity properties are immutable once committed to storage histories
-                    clsDriver originalRecord = clsDriver.Find(this.DriverDTO.DriverID);
-                    if (originalRecord != null && originalRecord.DriverDTO.PersonID != this.DriverDTO.PersonID)
-                    {
-                        this.DriverDTO.LastValidationError = "Validation Fail: Modifying the base identity PersonID reference on an active Driver record is strictly prohibited.";
-                        return false;
-                    }
-                    return _UpdateDriver();
+
+                 
+                    this.DriverDTO.LastValidationError = "Validation Fail: Driver records are historical immutable entities and cannot be modified.";
+                    return false;
 
                 default:
                     return false;

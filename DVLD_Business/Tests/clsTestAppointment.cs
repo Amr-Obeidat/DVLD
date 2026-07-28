@@ -83,13 +83,7 @@ namespace DVLD_Business.Tests
         private bool _UpdateAppointment()
         {
             return clsTestAppointmentsDataAccess.UpdateAppointment(
-                this.AppointmentDTO.TestAppointmentID,
-                this.AppointmentDTO.TestTypeID,
-                this.AppointmentDTO.LocalDrivingLicenseApplicationID,
-                this.AppointmentDTO.AppointmentDate,
-                this.AppointmentDTO.PaidFees,
-                this.AppointmentDTO.CreatedByUserID,
-                this.AppointmentDTO.IsLocked
+                this.AppointmentDTO.TestAppointmentID, this.AppointmentDTO.AppointmentDate, this.AppointmentDTO.IsLocked
             );
         }
 
@@ -129,6 +123,11 @@ namespace DVLD_Business.Tests
                         if (originalRecord.AppointmentDTO.LocalDrivingLicenseApplicationID != this.AppointmentDTO.LocalDrivingLicenseApplicationID)
                         {
                             this.AppointmentDTO.LastValidationError = "Validation Fail: Modifying the base LocalDrivingLicenseApplicationID link on active appointments is strictly prohibited.";
+                            return false;
+                        }
+                        if (originalRecord.AppointmentDTO.TestTypeID != this.AppointmentDTO.TestTypeID)
+                        {
+                            this.AppointmentDTO.LastValidationError = "Validation fail : Modifying the testy type id link is strictly prohibited."; 
                             return false;
                         }
                     }

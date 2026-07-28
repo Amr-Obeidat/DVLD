@@ -141,57 +141,16 @@ namespace DVLD_DataAccess.Applications
             return IsAdded;
         }
 
-        public static bool UpdateApplicationInfo(int ApplicationID, int ApplicantPersonID, int ApplicationTypeID,
-                DateTime ApplicationDate, byte ApplicationStatus, DateTime LastStatusDate, decimal PaidFees, int CreatedByUserID)
-        {
-            bool IsUpdated = false;
-            SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"update {clsApplicationsAttributes.TableName} set {clsApplicationsAttributes.colPersonId}=@ApplicantPersonID" +
-                $",{clsApplicationsAttributes.colApplicationType} = @ApplicationTypeID, " +
-                $"{clsApplicationsAttributes.colApplicationDate} = @ApplicationDate, " +
-                $"{clsApplicationsAttributes.colApplicationStatus} = @ApplicationStatus, " +
-                $"{clsApplicationsAttributes.colLastUpdatedDate} = @LastStatusDate, " +
-                $"{clsApplicationsAttributes.colPaidFees} = @PaidFees, " +
-                $"{clsApplicationsAttributes.colCreatedBy} = @CreatedByUserID " +
-                $"where {clsApplicationsAttributes.colApplicationId} = @ApplicationID";
-            SqlCommand command = new SqlCommand(query, connection);
-            using (connection)
-            {
-                using (command)
-                {
-                    command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
-                    command.Parameters.AddWithValue("@ApplicantPersonID", ApplicantPersonID);
-                    command.Parameters.AddWithValue("@ApplicationTypeID", ApplicationTypeID);
-                    command.Parameters.AddWithValue("@ApplicationDate", ApplicationDate);
-                    command.Parameters.AddWithValue("@ApplicationStatus", ApplicationStatus);
-                    command.Parameters.AddWithValue("@LastStatusDate", LastStatusDate);
-                    command.Parameters.AddWithValue("@PaidFees", PaidFees);
-                    command.Parameters.AddWithValue("@CreatedByUserID", CreatedByUserID);
-                    try
-                    {
-                        connection.Open();
-                        int rowsAffected = command.ExecuteNonQuery();
-                        IsUpdated = rowsAffected > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        IsUpdated = false;
-                        throw new Exception("Error updating application information: " + ex.Message);
-                    }
-                }
-            }
-            return IsUpdated;
-        }
-
+     
         public static bool UpdateApplicationStatus(int ApplicationId, byte NewStatues)
         {
 
             bool IsUpdated = false;
             SqlConnection connection = new SqlConnection(connectionstring);
             string query = $"update {clsApplicationsAttributes.TableName} " +
-                $"set{clsApplicationsAttributes.colApplicationStatus}=@ApplicationStatus," +
-                $"{clsApplicationsAttributes.colLastUpdatedDate}=@LastStatusDate where" +
-                $"{clsApplicationsAttributes.colApplicationId}=@ApplicationId";
+                $" set {clsApplicationsAttributes.colApplicationStatus}=@ApplicationStatus," +
+                $"{clsApplicationsAttributes.colLastUpdatedDate}=@LastStatusDate where " +
+                $" {clsApplicationsAttributes.colApplicationId}=@ApplicationId";
             SqlCommand command = new SqlCommand(query, connection);
 
             using (connection)
@@ -247,32 +206,7 @@ namespace DVLD_DataAccess.Applications
             return dt;
         }
 
-        public static bool DeleteApplication(int ApplicationID)
-        {
-            bool IsDeleted = false;
-            SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"DELETE FROM {clsApplicationsAttributes.TableName} WHERE {clsApplicationsAttributes.colApplicationId} = @ApplicationID";
-            SqlCommand command = new SqlCommand(query, connection);
-            using (connection)
-            {
-                using (command)
-                {
-                    command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
-                    try
-                    {
-                        connection.Open();
-                        int rowsAffected = command.ExecuteNonQuery();
-                        IsDeleted = rowsAffected > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        IsDeleted = false;
-                        throw new Exception("Error deleting application: " + ex.Message);
-                    }
-                }
-            }
-            return IsDeleted;
-        }
+       
     }
 }
 

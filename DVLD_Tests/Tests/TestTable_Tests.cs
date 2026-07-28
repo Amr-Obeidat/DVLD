@@ -85,7 +85,8 @@ public class TestsEvaluationTest
 
         Assert.IsNotNull(Updated, "The Record with  the Id " + Updated.TestDTO.TestID + "Was not found");
 
-        Updated.TestDTO.Notes = "Extra Double Glasses";
+        Updated.TestDTO.Notes = "Extra triple Glasses";
+        Updated.TestDTO.CreatedByUserID = 5;
      bool IsSaved=   Updated.Save();
         Assert.IsTrue(IsSaved, "The New Data Was nos saved properly" + Updated.TestDTO.LastValidationError);
 

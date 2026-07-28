@@ -101,17 +101,17 @@ namespace DVLD_DataAccess.TestAppointments
             return NewAppointmentID;
         }
 
-        public static bool UpdateAppointment(int TestAppointmentID, int TestTypeID, int LocalDrivingLicenseApplicationID, DateTime AppointmentDate, decimal PaidFees, int CreatedByUserID, bool IsLocked)
+        public static bool UpdateAppointment(int TestAppointmentID, DateTime AppointmentDate, bool IsLocked)
         {
             bool IsUpdated = false;
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"UPDATE {clsAppointmentsAttributes.TableName} SET {clsAppointmentsAttributes.colTestTypeId} = @TestTypeID, " +
-                           $"{clsAppointmentsAttributes.colLocalDrivingLicenseApplicationId} = @LocalDrivingLicenseApplicationID, " +
+
+            // ONLY update fields that represent legal state changes (Rescheduling & Locking)
+            string query = $"UPDATE {clsAppointmentsAttributes.TableName} SET " +
                            $"{clsAppointmentsAttributes.colAppointmentDate} = @AppointmentDate, " +
-                           $"{clsAppointmentsAttributes.colPaidFees} = @PaidFees, " +
-                           $"{clsAppointmentsAttributes.colCreatedBy} = @CreatedByUserID, " +
                            $"{clsAppointmentsAttributes.colIsLocked} = @IsLocked " +
                            $"WHERE {clsAppointmentsAttributes.colTestAppointmentId} = @TestAppointmentID";
+
             SqlCommand command = new SqlCommand(query, connection);
 
             using (connection)
@@ -119,12 +119,9 @@ namespace DVLD_DataAccess.TestAppointments
                 using (command)
                 {
                     command.Parameters.AddWithValue("@TestAppointmentID", TestAppointmentID);
-                    command.Parameters.AddWithValue("@TestTypeID", TestTypeID);
-                    command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", LocalDrivingLicenseApplicationID);
                     command.Parameters.AddWithValue("@AppointmentDate", AppointmentDate);
-                    command.Parameters.AddWithValue("@PaidFees", PaidFees);
-                    command.Parameters.AddWithValue("@CreatedByUserID", CreatedByUserID);
                     command.Parameters.AddWithValue("@IsLocked", IsLocked);
+
                     try
                     {
                         connection.Open();
@@ -134,7 +131,7 @@ namespace DVLD_DataAccess.TestAppointments
                     catch (Exception ex)
                     {
                         IsUpdated = false;
-                        throw new Exception("Error updating test appointment information: " + ex.Message);
+                        throw new Exception("Error updating test appointment schedule/lock status: " + ex.Message);
                     }
                 }
             }

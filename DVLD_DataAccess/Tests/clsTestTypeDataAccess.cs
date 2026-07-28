@@ -56,13 +56,11 @@ namespace DVLD_DataAccess.Tests
         }
 
       
-        public static bool UpdateTestType(int TestTypeId, string TestTypeTitle, string TestTypeDescription, decimal TestTypeFees)
+        public static bool UpdateTestfees(int TestTypeId, decimal TestTypeFees)
         {
             bool isUpdated = false;
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"UPDATE {clsTestTypeAttributes.TableName} " +
-                           $"SET {clsTestTypeAttributes.colTestTypeTitle} = @Title, " +
-                           $"{clsTestTypeAttributes.colTestTypeDescription} = @Description, " +
+            string query = $"UPDATE {clsTestTypeAttributes.TableName}  SET " +
                            $"{clsTestTypeAttributes.colTestTypeFees} = @Fees " +
                            $"WHERE {clsTestTypeAttributes.colTestTypeId} = @TestTypeID";
 
@@ -73,8 +71,6 @@ namespace DVLD_DataAccess.Tests
                 using (command)
                 {
                     command.Parameters.AddWithValue("@TestTypeID", TestTypeId);
-                    command.Parameters.AddWithValue("@Title", TestTypeTitle);
-                    command.Parameters.AddWithValue("@Description", TestTypeDescription);
                     command.Parameters.AddWithValue("@Fees", TestTypeFees);
 
                     try

@@ -61,14 +61,13 @@ namespace DVLD_DataAccess.Licenses
             return isFound;
         }
 
-        public static bool UpdateLicenseClass(int LicenseClassID, string ClassName, string ClassDescription,
+        public static bool UpdateLicenseClass(int LicenseClassID,
             byte MinimumAllowedAge, byte DefaultValidityLength, decimal ClassFees)
         {
             bool isUpdated = false;
             SqlConnection connection = new SqlConnection(connectionstring);
             string query = $"UPDATE {clsLicenseClassAttributes.TableName} " +
-                           $"SET {clsLicenseClassAttributes.colClassName} = @ClassName, " +
-                           $"{clsLicenseClassAttributes.colClassDescription} = @ClassDescription, " +
+                           $"SET "+
                            $"{clsLicenseClassAttributes.colMinimumAllowedAge} = @MinimumAllowedAge, " +
                            $"{clsLicenseClassAttributes.colDefaultValidityLength} = @DefaultValidityLength, " +
                            $"{clsLicenseClassAttributes.colClassFees} = @ClassFees " +
@@ -81,8 +80,6 @@ namespace DVLD_DataAccess.Licenses
                 using (command)
                 {
                     command.Parameters.AddWithValue("@LicenseClassID", LicenseClassID);
-                    command.Parameters.AddWithValue("@ClassName", ClassName);
-                    command.Parameters.AddWithValue("@ClassDescription", ClassDescription);
                     command.Parameters.AddWithValue("@MinimumAllowedAge", MinimumAllowedAge);
                     command.Parameters.AddWithValue("@DefaultValidityLength", DefaultValidityLength);
                     command.Parameters.AddWithValue("@ClassFees", ClassFees);

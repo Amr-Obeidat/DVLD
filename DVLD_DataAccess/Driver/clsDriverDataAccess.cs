@@ -104,7 +104,8 @@ namespace DVLD_DataAccess.Driver
             SqlCommand command = new SqlCommand(query, connection);
 
             using (connection)
-            {
+            { 
+
                 using (command)
                 {
                     command.Parameters.AddWithValue("@PersonID", PersonID);
@@ -128,39 +129,7 @@ namespace DVLD_DataAccess.Driver
             return NewDriverID;
         }
 
-        public static bool UpdateDriver(int DriverID, int PersonID, int CreatedByUserID, DateTime CreatedDate)
-        {
-            bool IsUpdated = false;
-            SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"UPDATE {clsDriversAttributes.TableName} SET {clsDriversAttributes.colPersonId} = @PersonID, " +
-                           $"{clsDriversAttributes.colCreatedBy} = @CreatedByUserID, " +
-                           $"{clsDriversAttributes.colCreatedDate} = @CreatedDate " +
-                           $"WHERE {clsDriversAttributes.colDriverId} = @DriverID";
-            SqlCommand command = new SqlCommand(query, connection);
-
-            using (connection)
-            {
-                using (command)
-                {
-                    command.Parameters.AddWithValue("@DriverID", DriverID);
-                    command.Parameters.AddWithValue("@PersonID", PersonID);
-                    command.Parameters.AddWithValue("@CreatedByUserID", CreatedByUserID);
-                    command.Parameters.AddWithValue("@CreatedDate", CreatedDate);
-                    try
-                    {
-                        connection.Open();
-                        int rowsAffected = command.ExecuteNonQuery();
-                        IsUpdated = rowsAffected > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        IsUpdated = false;
-                        throw new Exception("Error updating driver information: " + ex.Message);
-                    }
-                }
-            }
-            return IsUpdated;
-        }
+      
 
         public static bool DoesDriverExist(int DriverID)
         {

@@ -61,8 +61,6 @@ namespace DVLD_Business.Licenses
         {
             bool success = clsLicenseClassDataAccess.UpdateLicenseClass(
                 this.clsLicenseClassDTO.LicenseClassID,
-                this.clsLicenseClassDTO.ClassName,
-                this.clsLicenseClassDTO.ClassDescription,
                 this.clsLicenseClassDTO.MinimumAllowedAge,
                 this.clsLicenseClassDTO.DefaultValidityLength,
                 this.clsLicenseClassDTO.ClassFees
@@ -82,14 +80,56 @@ namespace DVLD_Business.Licenses
 
         public bool Save()
         {
-          
+      
             if (this.clsLicenseClassDTO.LicenseClassID <= 0)
             {
-                this.clsLicenseClassDTO.LastValidationError = "Validation Fail: Cannot save or create a zero/negative license class entity template.";
+                this.clsLicenseClassDTO.LastValidationError = "Validation Fail: Invalid or non-existent License Class ID.";
                 return false;
             }
 
-        
+          
+            clsLicenseClass originalClass = clsLicenseClass.Find(this.clsLicenseClassDTO.LicenseClassID);
+
+            if (originalClass == null)
+            {
+                this.clsLicenseClassDTO.LastValidationError = $"Validation Fail: License Class with ID [{this.clsLicenseClassDTO.LicenseClassID}] does not exist.";
+                return false;
+            }
+
+            if (originalClass.clsLicenseClassDTO.ClassName != this.clsLicenseClassDTO.ClassName)
+            {
+                this.clsLicenseClassDTO.LastValidationError = "Validation Fail: Modifying the License Class Name is prohibited.";
+                return false;
+            }
+
+         
+            if (originalClass.clsLicenseClassDTO.ClassDescription != this.clsLicenseClassDTO.ClassDescription)
+            {
+                this.clsLicenseClassDTO.LastValidationError = "Validation Fail: Modifying the License Class Description is prohibited.";
+                return false;
+            }
+
+          
+            if (this.clsLicenseClassDTO.MinimumAllowedAge < 16)
+            {
+                this.clsLicenseClassDTO.LastValidationError = "Validation Fail: Minimum Allowed Age cannot be less than 16 years.";
+                return false;
+            }
+
+            if (this.clsLicenseClassDTO.DefaultValidityLength <= 0)
+            {
+                this.clsLicenseClassDTO.LastValidationError = "Validation Fail: Default Validity Length must be at least 1 year.";
+                return false;
+            }
+
+           
+            if (this.clsLicenseClassDTO.ClassFees < 0)
+            {
+                this.clsLicenseClassDTO.LastValidationError = "Validation Fail: Class Fees cannot be negative.";
+                return false;
+            }
+
+         
             return _UpdateLicenseClass();
         }
     }

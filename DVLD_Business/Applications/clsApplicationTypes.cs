@@ -57,7 +57,7 @@ namespace DVLD_Business.Applications
 
         private bool _Update()
         {
-            return clsApplicationTypeDataAccess.UpdateApplicationTypeInfo(this.DTO.ApplicationTypeID, this.DTO.ApplicationTypeTitle, this.DTO.ApplicationFees);
+            return clsApplicationTypeDataAccess.UpdateApplicationTypeInfo(this.DTO.ApplicationTypeID, this.DTO.ApplicationFees);
         }
        public  bool  Save()
         {

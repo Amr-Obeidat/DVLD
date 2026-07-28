@@ -65,12 +65,12 @@ namespace DVLD_DataAccess.Applications
             return IsFound;
         }
 
-        public static bool UpdateApplicationTypeInfo(int ApplicationTypeID, string ApplicationTypeName, decimal ApplicationFees)
+        public static bool UpdateApplicationTypeInfo(int ApplicationTypeID, decimal ApplicationFees)
         {
             bool IsUpdated = false;
             SqlConnection connection = new SqlConnection(connectionstring);
             string query = $"update {clsApplicationTypeAttributes.TableName} set " +
-                $"{clsApplicationTypeAttributes.colApplicationTypeName} = @ApplicationTypeName, " +
+                 
                 $"{clsApplicationTypeAttributes.colApplicationFees} = @ApplicationFees " +
                 $"where {clsApplicationTypeAttributes.colApplicationTypeId} = @ApplicationTypeID";
             SqlCommand command = new SqlCommand(query, connection);
@@ -79,7 +79,7 @@ namespace DVLD_DataAccess.Applications
                 using (command)
                 {
                     command.Parameters.AddWithValue("@ApplicationTypeID", ApplicationTypeID);
-                    command.Parameters.AddWithValue("@ApplicationTypeName", ApplicationTypeName);
+                  
                     command.Parameters.AddWithValue("@ApplicationFees", ApplicationFees);
                     try
                     {

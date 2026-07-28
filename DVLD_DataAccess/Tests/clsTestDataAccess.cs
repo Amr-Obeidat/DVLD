@@ -101,15 +101,16 @@ namespace DVLD_DataAccess.Tests
             return NewTestID;
         }
 
-        public static bool UpdateTest(int TestID, int TestAppointmentID, bool TestResult, string Notes, int CreatedByUserID)
+        public static bool UpdateTest(int TestID, bool TestResult, string Notes)
         {
             bool IsUpdated = false;
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"UPDATE {clsTestsAttributes.TableName} SET {clsTestsAttributes.colTestAppointmentId} = @TestAppointmentID, " +
-                           $"{clsTestsAttributes.colTestResult} = @TestResult, " +
-                           $"{clsTestsAttributes.colNotes} = @Notes, " +
-                           $"{clsTestsAttributes.colCreatedBy} = @CreatedByUserID " +
-                           $"WHERE {clsTestsAttributes.colTestId} = @TestID";
+
+            string query = $"UPDATE {clsTestsAttributes.TableName} SET " +
+                     $"{clsTestsAttributes.colTestResult} = @TestResult, " +
+                     $"{clsTestsAttributes.colNotes} = @Notes " +
+                     $"WHERE {clsTestsAttributes.colTestId} = @TestID";
+
             SqlCommand command = new SqlCommand(query, connection);
 
             using (connection)
@@ -117,10 +118,9 @@ namespace DVLD_DataAccess.Tests
                 using (command)
                 {
                     command.Parameters.AddWithValue("@TestID", TestID);
-                    command.Parameters.AddWithValue("@TestAppointmentID", TestAppointmentID);
                     command.Parameters.AddWithValue("@TestResult", TestResult);
                     command.Parameters.AddWithValue("@Notes", string.IsNullOrWhiteSpace(Notes) ? (object)DBNull.Value : Notes);
-                    command.Parameters.AddWithValue("@CreatedByUserID", CreatedByUserID);
+                  
                     try
                     {
                         connection.Open();

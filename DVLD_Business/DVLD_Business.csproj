@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +45,9 @@
     <Compile Include="Applications\clsApplication.cs" />
     <Compile Include="Applications\clsApplicationTypes.cs" />
     <Compile Include="Driver\clsDrivercs.cs" />
+    <Compile Include="Licenses\clsDetainedLicense.cs" />
+    <Compile Include="Licenses\clsInternationalLicense.cs" />
+    <Compile Include="Licenses\clsLicense.cs" />
     <Compile Include="Licenses\clsLicenseClass.cs" />
     <Compile Include="Licenses\clsLocalDrivingLicensecs.cs" />
     <Compile Include="People\clsCountry.cs" />

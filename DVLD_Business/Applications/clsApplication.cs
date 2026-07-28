@@ -29,24 +29,24 @@ namespace DVLD_Business.Applications
 
     public class clsApplication
     {
-        public clsApplicationDTO clsApplicationDTO { get; set; }
+        public clsApplicationDTO ApplicationDTO { get; set; }
 
-        // COMPOSITION HOOKS: Gives your UI instant access to full objects
+        // COMPOSITION 
         public clsPerson PersonInfo { get; set; }
         public clsUser CreatedByUserInfo { get; set; }
 
         private clsApplication(clsApplicationDTO FilledDTO)
         {
-            this.clsApplicationDTO = FilledDTO;
+            this.ApplicationDTO = FilledDTO;
             this.PersonInfo = clsPerson.Find(FilledDTO.ApplicantPersonID);
             this.CreatedByUserInfo = clsUser.Find(FilledDTO.CreatedByUserID);
-          
+
         }
 
         public clsApplication()
         {
-            this.clsApplicationDTO = new clsApplicationDTO();
-            this.clsApplicationDTO.Mode = clsApplicationDTO.enMode.AddNew;
+            this.ApplicationDTO = new clsApplicationDTO();
+            this.ApplicationDTO.Mode = clsApplicationDTO.enMode.AddNew;
             this.PersonInfo = null;
             this.CreatedByUserInfo = null;
         }
@@ -89,109 +89,121 @@ namespace DVLD_Business.Applications
         {
             int NewId = -1;
             bool success = clsApplicationsDataAccess.AddNewApplication(
-                this.clsApplicationDTO.ApplicantPersonID,
-                this.clsApplicationDTO.ApplicationTypeID,
-                this.clsApplicationDTO.ApplicationDate,
-                this.clsApplicationDTO.ApplicationStatus,
-                this.clsApplicationDTO.LastStatusDate,
-                this.clsApplicationDTO.PaidFees,
-                this.clsApplicationDTO.CreatedByUserID,
+                this.ApplicationDTO.ApplicantPersonID,
+                this.ApplicationDTO.ApplicationTypeID,
+                this.ApplicationDTO.ApplicationDate,
+                this.ApplicationDTO.ApplicationStatus,
+                this.ApplicationDTO.LastStatusDate,
+                this.ApplicationDTO.PaidFees,
+                this.ApplicationDTO.CreatedByUserID,
                 ref NewId
             );
 
             if (success)
             {
-                this.clsApplicationDTO.ApplicationID = NewId;
-                this.clsApplicationDTO.Mode = clsApplicationDTO.enMode.Update;
+                this.ApplicationDTO.ApplicationID = NewId;
+                this.ApplicationDTO.Mode = clsApplicationDTO.enMode.Update;
                 return true;
             }
 
-            this.clsApplicationDTO.LastValidationError = "Database Error: Failed to insert new application record.";
+            this.ApplicationDTO.LastValidationError = "Database Error: Failed to insert new application record.";
             return false;
         }
 
-        private bool _UpdateApplicationInfo()
-        {
-            bool success = clsApplicationsDataAccess.UpdateApplicationInfo(
-                this.clsApplicationDTO.ApplicationID,
-                this.clsApplicationDTO.ApplicantPersonID,
-                this.clsApplicationDTO.ApplicationTypeID,
-                this.clsApplicationDTO.ApplicationDate,
-                this.clsApplicationDTO.ApplicationStatus,
-                this.clsApplicationDTO.LastStatusDate,
-                this.clsApplicationDTO.PaidFees,
-                this.clsApplicationDTO.CreatedByUserID
-            );
-
-            if (!success)
-            {
-                this.clsApplicationDTO.LastValidationError = "Database Error: Failed to update application details.";
-            }
-            return success;
-        }
+       
 
         public static DataTable GetAllApplications()
         {
             return clsApplicationsDataAccess.GetAllApplications();
         }
 
-        public bool UpdateStatus(byte NewStatus)
+        private bool _UpdateStatus(byte newStatus)
         {
-            // Fixed parameter count mismatch by passing DateTime.Now matching your DAL signature
-            if (clsApplicationsDataAccess.UpdateApplicationStatus(this.clsApplicationDTO.ApplicationID, NewStatus)==true)
+         
+            if (this.ApplicationDTO.ApplicationID <= 0)
             {
-                this.clsApplicationDTO.ApplicationStatus = NewStatus;
-                this.clsApplicationDTO.LastStatusDate = DateTime.Now;
-                this.clsApplicationDTO.Mode = clsApplicationDTO.enMode.Update;
+                this.ApplicationDTO.LastValidationError = "Validation Fail: Cannot update status of an unsaved application.";
+                return false;
+            }
+
+        
+            if (clsApplicationsDataAccess.UpdateApplicationStatus(this.ApplicationDTO.ApplicationID, newStatus))
+            {
+                this.ApplicationDTO.ApplicationStatus = newStatus;
+                this.ApplicationDTO.LastStatusDate = DateTime.Now;
+                this.ApplicationDTO.Mode = clsApplicationDTO.enMode.Update;
                 return true;
             }
 
-            this.clsApplicationDTO.LastValidationError = "Database Error: Failed to switch application status pipeline.";
+            this.ApplicationDTO.LastValidationError = "Database Error: Failed to switch application status pipeline.";
             return false;
         }
 
-        public static bool Delete(int ApplicationId)
+        public bool Cancel()
         {
-            return clsApplicationsDataAccess.DeleteApplication(ApplicationId);
+            if (this.ApplicationDTO.ApplicationStatus != 1) 
+            {
+                this.ApplicationDTO.LastValidationError = "Validation Fail: Only applications with 'New' status can be cancelled.";
+                return false;
+            }
+
+            return _UpdateStatus(2); // 2 = Cancelled
+        }
+
+        public bool Complete()
+        {
+            if (this.ApplicationDTO.ApplicationStatus != 1) // 1 = New
+            {
+                this.ApplicationDTO.LastValidationError = "Validation Fail: Only 'New' applications can be marked as completed.";
+                return false;
+            }
+
+            return _UpdateStatus(3); // 3 = Completed
         }
 
         public bool Save()
         {
-            // Before branching, verify relational components are synchronized
-            if (this.PersonInfo != null)
-                this.clsApplicationDTO.ApplicantPersonID = this.PersonInfo.PersonDTO.PersonID;
-
-            if (this.CreatedByUserInfo != null)
-                this.clsApplicationDTO.CreatedByUserID = this.CreatedByUserInfo.UserDTO.UserID;
-
-            // Integrity Checks
-            if (this.clsApplicationDTO.ApplicantPersonID <= 0 || this.clsApplicationDTO.CreatedByUserID <= 0)
+            
+            if (this.ApplicationDTO.Mode == clsApplicationDTO.enMode.Update || this.ApplicationDTO.ApplicationID > 0)
             {
-                this.clsApplicationDTO.LastValidationError = "Validation Fail: Applicant Person ID or Creator User ID is invalid.";
+                this.ApplicationDTO.LastValidationError = "System Restriction: Applications are immutable once created. Use Cancel(), Complete(), or UpdateStatus() to alter pipeline states.";
                 return false;
             }
 
-            switch (this.clsApplicationDTO.Mode)
+           
+            if (this.PersonInfo != null)
+                this.ApplicationDTO.ApplicantPersonID = this.PersonInfo.PersonDTO.PersonID;
+
+            if (this.CreatedByUserInfo != null)
+                this.ApplicationDTO.CreatedByUserID = this.CreatedByUserInfo.UserDTO.UserID;
+
+           
+            if ( this.ApplicationDTO.CreatedByUserID <= 0)
             {
-                case clsApplicationDTO.enMode.AddNew:
-                    int ActualApplicationId = clsApplicationsDataAccess.GetActiveApplicationID(
-                        this.clsApplicationDTO.ApplicantPersonID,
-                        this.clsApplicationDTO.ApplicationTypeID
-                    );
-
-                    if (ActualApplicationId != -1)
-                    {
-                        this.clsApplicationDTO.LastValidationError = "Validation Fail: A pending application of this type already exists.";
-                        return false;
-                    }
-                    return _AddNewApplication();
-
-                case clsApplicationDTO.enMode.Update:
-                    return _UpdateApplicationInfo();
-
-                default:
-                    return false;
+                this.ApplicationDTO.LastValidationError = "Validation Fail:  Creator User ID is invalid.";
+                return false;
             }
+
+            if (this.ApplicationDTO.ApplicantPersonID <= 0 )
+            {
+                this.ApplicationDTO.LastValidationError = "Validation Fail: Applicant Person ID  is invalid.";
+                return false;
+            }
+
+
+            int actualApplicationId = clsApplicationsDataAccess.GetActiveApplicationID(
+                this.ApplicationDTO.ApplicantPersonID,
+                this.ApplicationDTO.ApplicationTypeID
+            );
+
+            if (actualApplicationId != -1)
+            {
+                this.ApplicationDTO.LastValidationError = "Validation Fail: A pending application of this type already exists for this person.";
+                return false;
+            }
+
+         
+            return _AddNewApplication();
         }
     }
 }

@@ -30,6 +30,7 @@ namespace DVLD_Business.People
         public int NationalityCountryID { get; set; }
         public string ImagePath { get; set; }
         public string Address { get; set; }
+        public string LastValidationError { get;  set; }
     }
 
     public class clsPerson
@@ -189,15 +190,55 @@ namespace DVLD_Business.People
         }
         public bool Save()
         {
+
+            if (string.IsNullOrWhiteSpace(this.PersonDTO.FirstName))
+            {
+                this.PersonDTO.LastValidationError = "Validation Fail: First Name cannot be empty.";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.PersonDTO.LastName))
+            {
+                this.PersonDTO.LastValidationError = "Validation Fail: Last Name cannot be empty.";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.PersonDTO.NationalNo))
+            {
+                this.PersonDTO.LastValidationError = "Validation Fail: National Number cannot be empty.";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.PersonDTO.Phone))
+            {
+                this.PersonDTO.LastValidationError = "Validation Fail: Phone Number cannot be empty.";
+                return false;
+            }
+
+            if (this.PersonDTO.NationalityCountryID <= 0)
+            {
+                this.PersonDTO.LastValidationError = "Validation Fail: A valid Nationality Country must be selected.";
+                return false;
+            }
             switch (this.PersonDTO.Mode){
 
                 case clsPersonDTO.enMode.Update:
+                    clsPerson conflictingPerson = clsPerson.Find(this.PersonDTO.NationalNo);
+                    if (conflictingPerson != null && conflictingPerson.PersonDTO.PersonID != this.PersonDTO.PersonID)
+                    {
+                        this.PersonDTO.LastValidationError = $"Validation Fail: National No [{this.PersonDTO.NationalNo}] belongs to another person (ID: {conflictingPerson.PersonDTO.PersonID}).";
+                        return false;
+                    }
 
-                   
                     return this._UpdatePerson();
                 case clsPersonDTO.enMode.AddNew:
-                   
-                  return this._AddNewPerson();  
+                    clsPerson existingPerson = clsPerson.Find(this.PersonDTO.NationalNo);
+                    if (existingPerson != null)
+                    {
+                        this.PersonDTO.LastValidationError = $"Validation Fail: National No [{this.PersonDTO.NationalNo}] is already registered to another person.";
+                        return false;
+                    }
+                    return this._AddNewPerson();  
 
                 default:
                     return false;   

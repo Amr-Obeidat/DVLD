@@ -53,12 +53,8 @@ namespace DVLD_Business.Tests
 
         private bool _UpdateTestType()
         {
-            return clsTestTypeDataAccess.UpdateTestType(
-                this.clsTestTypesDTO.TestTypeId,    
-                this.clsTestTypesDTO.TestTypeTitle,
-                this.clsTestTypesDTO.TestTypeDescription,
-                this.clsTestTypesDTO.TestTypeFees
-            );
+
+            return clsTestTypeDataAccess.UpdateTestfees(this.clsTestTypesDTO.TestTypeId, this.clsTestTypesDTO.TestTypeFees);
         }
 
         public static DataTable GetAllTestTypes()

@@ -76,7 +76,11 @@ public class LicenseClassTest
 
 
         License.clsLicenseClassDTO.ClassFees = 15;
-        License.Save();
+        License.clsLicenseClassDTO.MinimumAllowedAge = 18;
+      
+       bool IsSaved= License.Save();
+
+        Assert.IsTrue(IsSaved, "The Last Updation Was not save " + License.clsLicenseClassDTO.LastValidationError);
 
     }
 }

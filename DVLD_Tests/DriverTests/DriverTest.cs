@@ -22,7 +22,7 @@ public class DriverTest
     [TestMethod]
     public void Test2_FindDriverByPersonID()
     {
-        // Use a known Person ID that is already a driver (e.g., 1 or 1025)
+       
         int personId = 1025;
         clsDriver driver = clsDriver.FindByPersonID(personId);
 
@@ -62,58 +62,42 @@ public class DriverTest
 
         bool result = duplicateAttempt.Save();
 
-        // Assert that the domain rule caught the duplicate and BLOCKED it
+     
         Assert.IsFalse(result, "Security vulnerability! The system allowed a person to register as a driver twice.");
         Assert.IsTrue(duplicateAttempt.DriverDTO.LastValidationError.Contains("Already Exists"), "Duplicate validation reason was not tracked correctly.");
         Console.WriteLine("Guard Clause successfully blocked duplicate registration: " + duplicateAttempt.DriverDTO.LastValidationError);
     }
 
+
     [TestMethod]
-    public void Test5_UpdateDriver_ValidChange()
+    public void Test5_TryToUpdateDriverRecord_ShouldFailRecordsCantBeUpdated()
     {
-        // Fetch an existing target record
-        int targetDriverId = 10;
-        clsDriver driver = clsDriver.Find(targetDriverId);
-        Assert.IsNotNull(driver, "Target driver not found.");
 
-        // Change an allowed mutable property
-        int newUserId = 15; // Assuming User 15 exists
-        driver.DriverDTO.CreatedByUserID = newUserId;
+       
+        clsDriver driver = clsDriver.Find(8);
+        Assert.IsNotNull(driver, "Test Setup Fail: Driver record with ID 8 was not found.");
 
-        // Commit update pipeline
-        bool isUpdated = driver.Save();
+       
+        driver.DriverDTO.CreatedByUserID = 4;
 
-        // Assert success and verify persistence
-        Assert.IsTrue(isUpdated, "Failed to update driver properties. Error: " + driver.DriverDTO.LastValidationError);
+      
+        bool isSaved = driver.Save();
 
-        // Refetch clean from database to prove it committed
-        clsDriver updatedSnapshot = clsDriver.Find(targetDriverId);
-        Assert.AreEqual(newUserId, updatedSnapshot.DriverDTO.CreatedByUserID, "CreatedByUserID did not properly save changes to SQL Server.");
-        Console.WriteLine($"Successfully updated Driver {targetDriverId} to track CreatedByUserID {newUserId}");
+      
+        Assert.IsFalse(isSaved, "Security Violation: Driver update was allowed, but Driver records must be strictly immutable!");
+
+    
+        string expectedError = "Validation Fail: Driver records are historical immutable entities and cannot be modified.";
+        Assert.AreEqual(expectedError, driver.DriverDTO.LastValidationError, "The expected immutability error message was not set on the DTO.");
+
+        Console.WriteLine("Success: Guardrail cleanly blocked Driver record modification.");
+        Console.WriteLine($"Logged Validation Error: \"{driver.DriverDTO.LastValidationError}\"");
+
+
     }
-
     [TestMethod]
-    public void Test6_UpdateDriver_ShouldFailOnImmutableFieldChange()
-    {
-        // This tests that your Gate 3 explicitly kills identity hijack attempts
-        int targetDriverId = 9;
-        clsDriver driver = clsDriver.Find(targetDriverId);
-        Assert.IsNotNull(driver, "Target driver not found.");
-
-        // Force an invalid change: attempt to switch the static base PersonID link
-        int illegalPersonId = 9999;
-        driver.DriverDTO.PersonID = illegalPersonId;
-
-        // Commit update pipeline
-        bool result = driver.Save();
-
-        // Assert that the domain rule caught it and BLOCKED it
-        Assert.IsFalse(result, "Security vulnerability! The business layer allowed changing an immutable PersonID relation.");
-        Assert.IsTrue(driver.DriverDTO.LastValidationError.Contains("strictly prohibited"), "Validation failure reason was not tracked correctly.");
-        Console.WriteLine("Guard Clause successfully blocked identity tamper attempt: " + driver.DriverDTO.LastValidationError);
-    }
-
-    [TestMethod]
+   
+   
     public void Test7_GetAllDrivers()
     {
         DataTable dt = clsDriver.GetAllDrivers();
