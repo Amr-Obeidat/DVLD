@@ -6,7 +6,7 @@ using DVLD_DataAccess.System_Database;
 
 namespace DVLD_DataAccess.People
 {
-    public class clsPersonDataAccess
+    public class clsPersonDataAccess 
     {
         readonly static string connectionstring =clsConnectionString.connectionString;
 
@@ -26,6 +26,12 @@ namespace DVLD_DataAccess.People
             public const string colImagePath = "ImagePath";
             public const string colAddress = "Address";
             public const string TableName = "DVLD.dbo.People";
+        }
+        private class Countrycolumns
+        {
+            public const string colCountryID = "CountryID";
+            public const string colCountryName = "CountryName";
+            public const string TableName = "Countries";
         }
 
         public static bool GetPersonInfoById(int PersonId, ref string FirstName, ref string SecondName, ref string ThirdName, ref string LastName, ref string NationalNo, ref DateTime BirthDate, ref char Gendor, ref string Email, ref int CountryId, ref string ImagePath, ref string Phone, ref string Address)
@@ -254,7 +260,22 @@ namespace DVLD_DataAccess.People
         {
             DataTable AllPeople = new DataTable();
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"SELECT * FROM {PersonColumns.TableName}";
+            string query = $"SELECT " +
+     $"{PersonColumns.colPersonId}, " +
+     $"{PersonColumns.colNationalId}, " +
+     $"{PersonColumns.colFirstName}, " +
+     $"{PersonColumns.colSecondName}, " +
+     $"ISNULL({PersonColumns.colThirdName}, '') AS {PersonColumns.colThirdName}, " +
+     $"{PersonColumns.colLastName}, " +
+     $"{PersonColumns.colBirthDate}, " +
+     $"{PersonColumns.colGender}, " +
+     $"CASE WHEN {PersonColumns.colGender} = 0 THEN 'Male' ELSE 'Female' END AS GenderCaption, " +
+     $"{PersonColumns.colAddress}, " +
+     $"{PersonColumns.colPhone}, " +
+     $"ISNULL({PersonColumns.colEmail}, '') AS {PersonColumns.colEmail}, " +
+     $"{PersonColumns.colNationalId}, " +
+     $"ISNULL({PersonColumns.colImagePath}, '') AS {PersonColumns.colImagePath} " +
+     $"FROM {PersonColumns.TableName} Inner join  {Countrycolumns.TableName} on {Countrycolumns.colCountryID}= {PersonColumns.colCountryId} Order by {PersonColumns.colFirstName}";
             SqlCommand command = new SqlCommand(query, connection);
             SqlDataAdapter adapter = new SqlDataAdapter(command);
 

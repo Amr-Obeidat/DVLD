@@ -2,11 +2,12 @@
 using DVLD_Business.People;
 using System;
 using System.Security.Cryptography.X509Certificates;
-
+using System.Data;
+using DVLD_DataAccess.People;
 namespace DVLD_Tests_.PeopleTests
 {
     [TestClass]
-    public sealed class peopleTest
+    public sealed class peopleTest 
     {
         // 1. TEST FIND BY NATIONAL NO
         [TestMethod]
@@ -111,6 +112,19 @@ namespace DVLD_Tests_.PeopleTests
             Console.WriteLine($"[SUCCESS - FETCHED ALL PEOPLE]");
             Console.WriteLine($"Total Rows Found: {dtAllPeople.Rows.Count}");
             Console.WriteLine("Columns Verified: OK");
+
+
+            foreach (DataRow row in dtAllPeople.Rows)
+            {
+                Console.WriteLine(
+                    $"ID: {row["PersonID"]} | " +
+                    $"National No: {row["NationalNo"]} | " +
+                    $"Name: {row["FirstName"]} {row["SecondName"]} {row["ThirdName"]} {row["LastName"]} | " +
+                    $"Gender: {row["GenderCaption"]} | " +
+                    $"Email: {(string.IsNullOrEmpty(row["Email"].ToString()) ? "[N/A]" : row["Email"])} | " +
+                    $"Image: {(string.IsNullOrEmpty(row["ImagePath"].ToString()) ? "[No Image]" : row["ImagePath"])}"
+                );
+            }
         }
     }
 }
