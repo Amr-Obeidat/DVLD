@@ -16,9 +16,26 @@ namespace DVLD_Tests_.PeopleTests
             // Use the NationalNo of your existing record (ID 1)
             string targetNationalNo = "N101"; // <-- Change this to Mohammed's actual NationalNo from DB
 
+           
             clsPerson person = clsPerson.Find(targetNationalNo);
 
             Assert.IsNotNull(person, $"Fail: Person with NationalNo '{targetNationalNo}' not found.");
+
+            Console.WriteLine($"[SUCCESS - FIND BY NATIONAL NO]");
+            Console.WriteLine($"Name: {person.PersonDTO.FirstName} {person.PersonDTO.LastName}");
+        }
+
+        [TestMethod]
+        public void Test2_FindByPersonId()
+        {
+
+
+            int PersonId = 7041;
+            
+
+            clsPerson person = clsPerson.Find(PersonId);
+
+            Assert.IsNotNull(person, $"Fail: Person with id '{PersonId}' not found.");
 
             Console.WriteLine($"[SUCCESS - FIND BY NATIONAL NO]");
             Console.WriteLine($"Name: {person.PersonDTO.FirstName} {person.PersonDTO.LastName}");
@@ -37,7 +54,7 @@ namespace DVLD_Tests_.PeopleTests
             newPerson.PersonDTO.ThirdName = "";
             newPerson.PersonDTO.LastName = "Runner";
             newPerson.PersonDTO.DateOfBirth = new DateTime(2000, 1, 1);
-            newPerson.PersonDTO.Gender = 'M';
+            newPerson.PersonDTO.Gender = 1;
             newPerson.PersonDTO.Phone = "0790000000";
             newPerson.PersonDTO.Email = "test@runner.com";
             newPerson.PersonDTO.NationalityCountryID = 1; // Ensure Country ID 1 exists!

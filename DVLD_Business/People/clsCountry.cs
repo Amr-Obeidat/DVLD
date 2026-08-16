@@ -32,6 +32,25 @@ namespace DVLD_Business.People
             return null;
         }
 
+        public static clsCountry Find(string CountryName)
+        {
+
+            int CountryId = -1;
+
+            if (clsCountryDataAccess.GetCountryInfoByCountryName(ref CountryId, CountryName))
+            {
+                return new clsCountry(new clsCountryDTO
+                {
+                    CountryName = CountryName,
+                    CountryID = CountryId
+
+                });
+
+
+
+            }
+            return null;
+        }
         public static DataTable GetAllCountries()
         {
             return clsCountryDataAccess.GetAllCountries();

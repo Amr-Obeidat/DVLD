@@ -45,6 +45,36 @@ namespace DVLD_DataAccess.People
             }
             return isFound;
         }
+        public static bool GetCountryInfoByCountryName( ref int  CountryID, string CountryName)
+        {
+            bool isFound = false;
+            SqlConnection connection = new SqlConnection(connectionstring);
+            string query = $"SELECT {Countrycolumns.colCountryID} FROM {Countrycolumns.TableName} WHERE {Countrycolumns.colCountryName} = @CountryName";
+            SqlCommand command = new SqlCommand(query, connection);
+
+            using (connection)
+            {
+                using (command)
+                {
+                    command.Parameters.AddWithValue("@CountryName", CountryName);
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            isFound = true;
+                            CountryID = Convert.ToInt32(result);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("DAL Error: " + ex.Message);
+                    }
+                }
+            }
+            return isFound;
+        }
 
         public static DataTable GetAllCountries()
         {

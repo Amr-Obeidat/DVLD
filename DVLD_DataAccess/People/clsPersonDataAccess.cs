@@ -34,7 +34,7 @@ namespace DVLD_DataAccess.People
             public const string TableName = "Countries";
         }
 
-        public static bool GetPersonInfoById(int PersonId, ref string FirstName, ref string SecondName, ref string ThirdName, ref string LastName, ref string NationalNo, ref DateTime BirthDate, ref char Gendor, ref string Email, ref int CountryId, ref string ImagePath, ref string Phone, ref string Address)
+        public static bool GetPersonInfoById(int PersonId, ref string FirstName, ref string SecondName, ref string ThirdName, ref string LastName, ref string NationalNo, ref DateTime BirthDate, ref short Gendor, ref string Email, ref int CountryId, ref string ImagePath, ref string Phone, ref string Address)
         {
             bool IsFound = false;
             SqlConnection connection = new SqlConnection(connectionstring);
@@ -61,7 +61,7 @@ namespace DVLD_DataAccess.People
                                 LastName = reader[PersonColumns.colLastName].ToString();
                                 NationalNo = reader[PersonColumns.colNationalId].ToString();
                                 BirthDate = (DateTime)reader[PersonColumns.colBirthDate];
-                                Gendor = Convert.ToChar(reader[PersonColumns.colGender]);
+                                Gendor = (short)(byte)(reader[PersonColumns.colGender]);
                                 Email = reader[PersonColumns.colEmail] != DBNull.Value ? reader[PersonColumns.colEmail].ToString() : "";
                                 CountryId = (int)reader[PersonColumns.colCountryId];
                                 ImagePath = reader[PersonColumns.colImagePath] != DBNull.Value ? reader[PersonColumns.colImagePath].ToString() : "";
@@ -80,7 +80,7 @@ namespace DVLD_DataAccess.People
             return IsFound;
         }
 
-        public static bool GetPersonInfoByNationalNo(string NationalNo, ref int PersonId, ref string FirstName, ref string SecondName, ref string ThirdName, ref string LastName, ref DateTime BirthDate, ref char Gender, ref string Email, ref int CountryId, ref string ImagePath, ref string Phone, ref string Address)
+        public static bool GetPersonInfoByNationalNo(string NationalNo, ref int PersonId, ref string FirstName, ref string SecondName, ref string ThirdName, ref string LastName, ref DateTime BirthDate, ref short Gender, ref string Email, ref int CountryId, ref string ImagePath, ref string Phone, ref string Address)
         {
             SqlConnection connection = new SqlConnection(connectionstring);
             string query = $"SELECT * FROM {PersonColumns.TableName} WHERE {PersonColumns.colNationalId}=@NationalNo";
@@ -106,7 +106,7 @@ namespace DVLD_DataAccess.People
                                 ThirdName = reader[PersonColumns.colThirdName] != DBNull.Value ? reader[PersonColumns.colThirdName].ToString() : "";
                                 LastName = reader[PersonColumns.colLastName].ToString();
                                 BirthDate = (DateTime)reader[PersonColumns.colBirthDate];
-                                Gender = Convert.ToChar(reader[PersonColumns.colGender]);
+                                Gender = (short)(byte)(reader[PersonColumns.colGender]);
                                 Email = reader[PersonColumns.colEmail] != DBNull.Value ? reader[PersonColumns.colEmail].ToString() : "";
                                 CountryId = (int)reader[PersonColumns.colCountryId];
                                 ImagePath = reader[PersonColumns.colImagePath] != DBNull.Value ? reader[PersonColumns.colImagePath].ToString() : "";
@@ -125,7 +125,7 @@ namespace DVLD_DataAccess.People
             return IsFound;
         }
 
-        public static int AddNewPerson(string FirstName, string SecondName, string ThirdName, string LastName, string NationalNo, DateTime DateOfBirth, char Gender, string Phone, string Email, int NationalityCountryID, string ImagePath, string Address)
+        public static int AddNewPerson(string FirstName, string SecondName, string ThirdName, string LastName, string NationalNo, DateTime DateOfBirth, short Gender, string Phone, string Email, int NationalityCountryID, string ImagePath, string Address)
         {
             int InsertedID = -1;
             SqlConnection connection = new SqlConnection(connectionstring);
@@ -175,7 +175,7 @@ namespace DVLD_DataAccess.People
             return InsertedID;
         }
 
-        public static bool UpdatePerson(int PersonId, string FirstName, string SecondName, string ThirdName, string LastName, string NationalNo, DateTime DateOfBirth, char Gender, string Phone, string Email, int NationalityCountryId, string ImagePath, string Address)
+        public static bool UpdatePerson(int PersonId, string FirstName, string SecondName, string ThirdName, string LastName, string NationalNo, DateTime DateOfBirth, short Gender, string Phone, string Email, int NationalityCountryId, string ImagePath, string Address)
         {
             int rowsAffected = -1;
             SqlConnection connection = new SqlConnection(connectionstring);
@@ -260,22 +260,27 @@ namespace DVLD_DataAccess.People
         {
             DataTable AllPeople = new DataTable();
             SqlConnection connection = new SqlConnection(connectionstring);
+
             string query = $"SELECT " +
-     $"{PersonColumns.colPersonId}, " +
-     $"{PersonColumns.colNationalId}, " +
-     $"{PersonColumns.colFirstName}, " +
-     $"{PersonColumns.colSecondName}, " +
-     $"ISNULL({PersonColumns.colThirdName}, '') AS {PersonColumns.colThirdName}, " +
-     $"{PersonColumns.colLastName}, " +
-     $"{PersonColumns.colBirthDate}, " +
-     $"{PersonColumns.colGender}, " +
-     $"CASE WHEN {PersonColumns.colGender} = 0 THEN 'Male' ELSE 'Female' END AS GenderCaption, " +
-     $"{PersonColumns.colAddress}, " +
-     $"{PersonColumns.colPhone}, " +
-     $"ISNULL({PersonColumns.colEmail}, '') AS {PersonColumns.colEmail}, " +
-     $"{PersonColumns.colNationalId}, " +
-     $"ISNULL({PersonColumns.colImagePath}, '') AS {PersonColumns.colImagePath} " +
-     $"FROM {PersonColumns.TableName} Inner join  {Countrycolumns.TableName} on {Countrycolumns.colCountryID}= {PersonColumns.colCountryId} Order by {PersonColumns.colFirstName}";
+                    $"{PersonColumns.TableName}.{PersonColumns.colPersonId}, " +
+                    $"{PersonColumns.TableName}.{PersonColumns.colNationalId}, " +
+                    $"{PersonColumns.colFirstName}, " +
+                    $"{PersonColumns.colSecondName}, " +
+                    $"ISNULL({PersonColumns.colThirdName}, '') AS {PersonColumns.colThirdName}, " +
+                    $"{PersonColumns.colLastName}, " +
+                    $"{PersonColumns.colBirthDate}, " +
+                    $"{PersonColumns.colGender}, " +
+                    $"CASE WHEN {PersonColumns.colGender} = 0 THEN 'Male' ELSE 'Female' END AS GenderCaption, " +
+                    $"{Countrycolumns.TableName}.{Countrycolumns.colCountryName} AS CountryName, " + 
+                    $"{PersonColumns.colAddress}, " +
+                    $"{PersonColumns.colPhone}, " +
+                    $"ISNULL({PersonColumns.colEmail}, '') AS {PersonColumns.colEmail}, " +
+                    $"ISNULL({PersonColumns.colImagePath}, '') AS {PersonColumns.colImagePath} " +
+                    $"FROM {PersonColumns.TableName} " +
+                    $"INNER JOIN {Countrycolumns.TableName} ON {Countrycolumns.TableName}.{Countrycolumns.colCountryID} = {PersonColumns.TableName}.{PersonColumns.colCountryId} " +
+                    $"ORDER BY {PersonColumns.colFirstName}";
+
+
             SqlCommand command = new SqlCommand(query, connection);
             SqlDataAdapter adapter = new SqlDataAdapter(command);
 

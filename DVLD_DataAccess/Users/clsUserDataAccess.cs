@@ -82,14 +82,73 @@ namespace DVLD_DataAccess.Users
 
 
         }
+        public static bool FindUserByPersonId( int PersonId, ref string UserName, ref int UserId, ref string Password, ref bool IsActive)
+        {
 
+
+
+            SqlConnection connection = new SqlConnection(connectionstring);
+            string query = $"select *  from {UserAttributes.TableName} where {UserAttributes.colUserId}=@PersonID";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            bool IsFound = false;
+
+
+            command.Parameters.AddWithValue("@PersonID", PersonId);
+            using (connection)
+            {
+
+                using (command)
+                {
+
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        using (reader)
+                        {
+
+
+                            if (reader.Read())
+                            {
+
+                                IsFound = true;
+                                UserName = reader[UserAttributes.colUserName].ToString();
+                                Password = reader[UserAttributes.colPassword].ToString();
+                                UserId = Convert.ToInt32( reader[UserAttributes.colUserId]);
+                                IsActive = Convert.ToBoolean(reader[UserAttributes.colIsActive]);
+
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        Console.WriteLine("Iam The Find In the UserDataAccess " + ex.Message);
+                    }
+                }
+            }
+            return IsFound;
+
+
+        }
         public static DataTable GetAllUsers()
         {
 
             DataTable dt = new DataTable();
 
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"select  {UserAttributes.colUserId}, {UserAttributes.colUserName}, {UserAttributes.colPersonId},  {UserAttributes.colIsActive} from {UserAttributes.TableName}";
+            string query = $@"
+    SELECT 
+        {UserAttributes.colUserId}, 
+        {UserAttributes.TableName}.{UserAttributes.colPersonId}, 
+        FullName = People.FirstName + ' ' + People.SecondName + ' ' + ISNULL(People.ThirdName, '') + ' ' + People.LastName, 
+        {UserAttributes.colUserName}, 
+        {UserAttributes.colIsActive} 
+    FROM {UserAttributes.TableName}
+    INNER JOIN People ON {UserAttributes.TableName}.{UserAttributes.colPersonId} = People.PersonID;";
             SqlCommand command = new SqlCommand(query, connection);
 
             using (connection)
@@ -203,7 +262,7 @@ namespace DVLD_DataAccess.Users
             return RowsAffectd > 0;
         }
 
-        public static bool IsUserExistForPersonID(int PersonId)
+        public static bool IsUserExistByPersonID(int PersonId)
         {
             bool IsExist = false;
             SqlConnection connection = new SqlConnection(connectionstring);
@@ -233,7 +292,7 @@ namespace DVLD_DataAccess.Users
             }
             return IsExist;
         }
-        public static bool IsUserExist(int UserId)
+        public static bool IsUserExistByUserId(int UserId)
         {
             bool IsExist = false;
             SqlConnection connection = new SqlConnection(connectionstring);

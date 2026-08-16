@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace DVLD_Business.People
 {
-    // 1. DTO is outside the main class but in the same namespace for cleanliness
+    
     public class clsPersonDTO
     {
         public enum enMode { AddNew = 0, Update = 1 };
@@ -24,13 +24,20 @@ namespace DVLD_Business.People
         public string ThirdName { get; set; }
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public char Gender { get; set; }
+        public short Gender { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public int NationalityCountryID { get; set; }
         public string ImagePath { get; set; }
         public string Address { get; set; }
         public string LastValidationError { get;  set; }
+
+
+        public string FullName()
+        {
+            return FirstName + " " + SecondName + " " + ThirdName + " " + LastName;
+
+        }
     }
 
     public class clsPerson
@@ -55,7 +62,7 @@ namespace DVLD_Business.People
             string FirstName = "", SecondName = "", ThirdName = "", LastName = "";
             string NationalNo = "", Email = "", Phone = "", ImagePath = "", Address = "";
             DateTime DateOfBirth = DateTime.Now;
-            char Gender = 'M';
+            short Gender = 0;
             int NationalityCountryID = -1;
 
 
@@ -101,7 +108,7 @@ namespace DVLD_Business.People
             int PersonId = -1;
             string Email = "", Phone = "", ImagePath = "", Address = "";
             DateTime DateOfBirth = DateTime.Now;
-            char Gender = 'M';
+            short Gender = 0;
             int NationalityCountryID = -1;
 
 
@@ -188,6 +195,12 @@ namespace DVLD_Business.People
         {
             return clsPersonDataAccess.IsPersonExists(PersonId);
         }
+
+        public static bool IsPersonExists(string NationalNo)
+        {
+
+            return clsPersonDataAccess.IsPersonExists(NationalNo);
+        }
         public bool Save()
         {
 
@@ -238,9 +251,17 @@ namespace DVLD_Business.People
                         this.PersonDTO.LastValidationError = $"Validation Fail: National No [{this.PersonDTO.NationalNo}] is already registered to another person.";
                         return false;
                     }
-                    return this._AddNewPerson();  
+                   if (this._AddNewPerson())
+                    {
+                        this.PersonDTO.Mode= clsPersonDTO.enMode.Update;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
 
-                default:
+                        default:
                     return false;   
 
 

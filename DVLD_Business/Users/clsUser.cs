@@ -133,7 +133,7 @@ namespace DVLD_Business.Users
 
         public static bool IsUserExists(int UserID)
         {
-            return clsUserDataAccess.IsUserExist(UserID);
+            return clsUserDataAccess.IsUserExistByUserId(UserID);
         }
 
         public static bool IsUserExists(string UserName)
@@ -142,7 +142,7 @@ namespace DVLD_Business.Users
         }
         public static bool IsUserExistsByPersonID(int PersonID)
         {
-            return clsUserDataAccess.IsUserExistForPersonID(PersonID);
+            return clsUserDataAccess.IsUserExistByPersonID(PersonID);
         }
 
 
