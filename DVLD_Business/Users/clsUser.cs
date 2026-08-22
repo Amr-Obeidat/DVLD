@@ -93,6 +93,37 @@ namespace DVLD_Business.Users
 
         }
 
+        public static clsUser Find(string UserName, string Password)
+        {
+            bool IsFound = false;
+            int UserId = -1;
+            int PersonId = -1;
+            bool IsActive = false;
+            IsFound = clsUserDataAccess.GetUserByUserNameAndPassword(UserName, Password, ref UserId, ref PersonId, ref IsActive);
+            if (IsFound)
+            {
+                clsUser UserInfo = new clsUser();
+                UserInfo.UserDTO.Mode = clsUserDTO.enMode.Update;
+                UserInfo.UserDTO.UserID = UserId;
+                UserInfo.UserDTO.PersonID = PersonId;
+                UserInfo.UserDTO.UserName = UserName;
+                UserInfo.UserDTO.Password = Password;
+                UserInfo.UserDTO.IsActive = IsActive;
+                clsPerson PersonInfo = clsPerson.Find(PersonId);
+                if (PersonInfo != null)
+                {
+                    return new clsUser(UserInfo.UserDTO, PersonInfo);
+                }
+                else
+                {
+                    return new clsUser(UserInfo.UserDTO, null);
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
         private bool _AddNewUser()
         {
 

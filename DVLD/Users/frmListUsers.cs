@@ -163,6 +163,7 @@ namespace DVLD.Users
         {
             frmAddUpdateUser frm = new frmAddUpdateUser();
             frm.DataBack += Frm_DataBack;
+            frm.ShowDialog();
         }
 
         private void _AddNewUserToGrid(int UserId)

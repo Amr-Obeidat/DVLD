@@ -1,0 +1,1772 @@
+[1mdiff --git a/DVLD/DVLD.csproj b/DVLD/DVLD.csproj[m
+[1mindex adecda2..323af2d 100644[m
+[1m--- a/DVLD/DVLD.csproj[m
+[1m+++ b/DVLD/DVLD.csproj[m
+[36m@@ -33,8 +33,14 @@[m
+     <WarningLevel>4</WarningLevel>[m
+   </PropertyGroup>[m
+   <ItemGroup>[m
+[32m+[m[32m    <Reference Include="Guna.UI2, Version=2.0.4.8, Culture=neutral, PublicKeyToken=8b9d14aa5142e261, processorArchitecture=MSIL">[m
+[32m+[m[32m      <HintPath>packages\Guna.UI2.WinForms.2.0.4.8\lib\net48\Guna.UI2.dll</HintPath>[m
+[32m+[m[32m    </Reference>[m
+     <Reference Include="System" />[m
+     <Reference Include="System.Core" />[m
+[32m+[m[32m    <Reference Include="System.Design" />[m
+[32m+[m[32m    <Reference Include="System.Management" />[m
+[32m+[m[32m    <Reference Include="System.Web" />[m
+     <Reference Include="System.Xml.Linq" />[m
+     <Reference Include="System.Data.DataSetExtensions" />[m
+     <Reference Include="Microsoft.CSharp" />[m
+[36m@@ -46,12 +52,43 @@[m
+     <Reference Include="System.Xml" />[m
+   </ItemGroup>[m
+   <ItemGroup>[m
+[32m+[m[32m    <Compile Include="Applications\frmListApplicationTypes.cs">[m
+[32m+[m[32m      <SubType>Form</SubType>[m
+[32m+[m[32m    </Compile>[m
+[32m+[m[32m    <Compile Include="Applications\frmListApplicationTypes.Designer.cs">[m
+[32m+[m[32m      <DependentUpon>frmListApplicationTypes.cs</DependentUpon>[m
+[32m+[m[32m    </Compile>[m
+[32m+[m[32m    <Compile Include="Applications\frmUpdateApplicationType.cs">[m
+[32m+[m[32m      <SubType>Form</SubType>[m
+[32m+[m[32m    </Compile>[m
+[32m+[m[32m    <Compile Include="Applications\frmUpdateApplicationType.Designer.cs">[m
+[32m+[m[32m      <DependentUpon>frmUpdateApplicationType.cs</DependentUpon>[m
+[32m+[m[32m    </Compile>[m
+     <Compile Include="FormTests\User control tests\frmTestUserControlCardcs.cs">[m
+       <SubType>Form</SubType>[m
+     </Compile>[m
+     <Compile Include="FormTests\User control tests\frmTestUserControlCardcs.Designer.cs">[m
+       <DependentUpon>frmTestUserControlCardcs.cs</DependentUpon>[m
+     </Compile>[m
+[32m+[m[32m    <Compile Include="GlobalClasses\clsGlobal.cs" />[m
+[32m+[m[32m    <Compile Include="LogIn\frmLogin.cs">[m
+[32m+[m[32m      <SubType>Form</SubType>[m
+[32m+[m[32m    </Compile>[m
+[32m+[m[32m    <Compile Include="LogIn\frmLogin.Designer.cs">[m
+[32m+[m[32m      <DependentUpon>frmLogin.cs</DependentUpon>[m
+[32m+[m[32m    </Compile>[m
+[32m+[m[32m    <Compile Include="Tests\frmEditTestType.cs">[m
+[32m+[m[32m      <SubType>Form</SubType>[m
+[32m+[m[32m    </Compile>[m
+[32m+[m[32m    <Compile Include="Tests\frmEditTestType.Designer.cs">[m
+[32m+[m[32m      <DependentUpon>frmEditTestType.cs</DependentUpon>[m
+[32m+[m[32m    </Compile>[m
+[32m+[m[32m    <Compile Include="Tests\frmListTestTypes.cs">[m
+[32m+[m[32m      <SubType>Form</SubType>[m
+[32m+[m[32m    </Compile>[m
+[32m+[m[32m    <Compile Include="Tests\frmListTestTypes.Designer.cs">[m
+[32m+[m[32m      <DependentUpon>frmListTestTypes.cs</DependentUpon>[m
+[32m+[m[32m    </Compile>[m
+     <Compile Include="Users\frmAddUpdateUser.cs">[m
+       <SubType>Form</SubType>[m
+     </Compile>[m
+[36m@@ -88,11 +125,11 @@[m
+     <Compile Include="People\PeopleControls\ctrPersonCardWithFiltercs.Designer.cs">[m
+       <DependentUpon>ctrPersonCardWithFiltercs.cs</DependentUpon>[m
+     </Compile>[m
+[31m-    <Compile Include="Main\Form1.cs">[m
+[32m+[m[32m    <Compile Include="Main\frmMain.cs">[m
+       <SubType>Form</SubType>[m
+     </Compile>[m
+[31m-    <Compile Include="Main\Form1.Designer.cs">[m
+[31m-      <DependentUpon>Form1.cs</DependentUpon>[m
+[32m+[m[32m    <Compile Include="Main\frmMain.Designer.cs">[m
+[32m+[m[32m      <DependentUpon>frmMain.cs</DependentUpon>[m
+     </Compile>[m
+     <Compile Include="FormTests\User control tests\frmTestPersonControlCard.cs">[m
+       <SubType>Form</SubType>[m
+[36m@@ -143,9 +180,27 @@[m
+     <Compile Include="Users\UserControls\ctrUserCard.Designer.cs">[m
+       <DependentUpon>ctrUserCard.cs</DependentUpon>[m
+     </Compile>[m
+[32m+[m[32m    <EmbeddedResource Include="Applications\frmListApplicationTypes.resx">[m
+[32m+[m[32m      <DependentUpon>frmListApplicationTypes.cs</DependentUpon>[m
+[32m+[m[32m    </EmbeddedResource>[m
+[32m+[m[32m    <EmbeddedResource Include="Applications\frmUpdateApplicationType.resx">[m
+[32m+[m[32m      <DependentUpon>frmUpdateApplicationType.cs</DependentUpon>[m
+[32m+[m[32m    </EmbeddedResource>[m
+     <EmbeddedResource Include="FormTests\User control tests\frmTestUserControlCardcs.resx">[m
+       <DependentUpon>frmTestUserControlCardcs.cs</DependentUpon>[m
+     </EmbeddedResource>[m
+[32m+[m[32m    <EmbeddedResource Include="LogIn\frmLogin.resx">[m
+[32m+[m[32m      <DependentUpon>frmLogin.cs</DependentUpon>[m
+[32m+[m[32m    </EmbeddedResource>[m
+[32m+[m[32m    <EmbeddedResource Include="Main\frmMain.resx">[m
+[32m+[m[32m      <DependentUpon>frmMain.cs</DependentUpon>[m
+[32m+[m[32m    </EmbeddedResource>[m
+[32m+[m[32m    <EmbeddedResource Include="Tests\frmEditTestType.resx">[m
+[32m+[m[32m      <DependentUpon>frmEditTestType.cs</DependentUpon>[m
+[32m+[m[32m    </EmbeddedResource>[m
+[32m+[m[32m    <EmbeddedResource Include="Tests\frmListTestTypes.resx">[m
+[32m+[m[32m      <DependentUpon>frmListTestTypes.cs</DependentUpon>[m
+[32m+[m[32m    </EmbeddedResource>[m
+     <EmbeddedResource Include="Users\frmAddUpdateUser.resx">[m
+       <DependentUpon>frmAddUpdateUser.cs</DependentUpon>[m
+     </EmbeddedResource>[m
+[36m@@ -199,6 +254,8 @@[m
+     <EmbeddedResource Include="Users\UserControls\ctrUserCard.resx">[m
+       <DependentUpon>ctrUserCard.cs</DependentUpon>[m
+     </EmbeddedResource>[m
+[32m+[m[32m    <None Include="app.config" />[m
+[32m+[m[32m    <None Include="packages.config" />[m
+     <None Include="Properties\Settings.settings">[m
+       <Generator>SettingsSingleFileGenerator</Generator>[m
+       <LastGenOutput>Settings.Designer.cs</LastGenOutput>[m
+[36m@@ -575,5 +632,62 @@[m
+   <ItemGroup>[m
+     <Folder Include="FormTests\peopleFromTests\" />[m
+   </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\Login.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\closedeye.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\opendeye.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\Applications1.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\Car.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\Users.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\Settings.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\MainPhoto.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\People.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\Applications2.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\Keys.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\SignOut.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\DrivingLicenseType.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\DrivingLicenseType1.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\icons8-driving-license-64.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\driver-license.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\resume.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\icons8-locked-user-64.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+[32m+[m[32m  <ItemGroup>[m
+[32m+[m[32m    <None Include="Resources\TestTypes.png" />[m
+[32m+[m[32m  </ItemGroup>[m
+   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />[m
+ </Project>[m
+\ No newline at end of file[m
+[1mdiff --git a/DVLD/FormTests/User control tests/frmTestPersonControlCard.Designer.cs b/DVLD/FormTests/User control tests/frmTestPersonControlCard.Designer.cs[m
+[1mindex 07f1fab..a27ef7d 100644[m
+[1m--- a/DVLD/FormTests/User control tests/frmTestPersonControlCard.Designer.cs[m	
+[1m+++ b/DVLD/FormTests/User control tests/frmTestPersonControlCard.Designer.cs[m	
+[36m@@ -29,30 +29,135 @@[m
+         private void InitializeComponent()[m
+         {[m
+             this.ctrlPersonCard1 = new DVLD.Controls.ctrlPersonCard();[m
+[32m+[m[32m            this.applicationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();[m
+[32m+[m[32m            this.peopleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();[m
+[32m+[m[32m            this.driversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();[m
+[32m+[m[32m            this.usersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();[m
+[32m+[m[32m            this.accountSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();[m
+[32m+[m[32m            this.currentUserInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();[m
+[32m+[m[32m            this.tsmChangePassword = new System.Windows.Forms.ToolStripMenuItem();[m
+[32m+[m[32m            this.tsmSignOut = new System.Windows.Forms.ToolStripMenuItem();[m
+[32m+[m[32m            this.cmsMain = new System.Windows.Forms.MenuStrip();[m
+[32m+[m[32m            this.cmsMain.SuspendLayout();[m
+             this.SuspendLayout();[m
+             // [m
+             // ctrlPersonCard1[m
+             // [m
+[32m+[m[32m            this.ctrlPersonCard1.EnableEditPersonLink = true;[m
+[32m+[m[32m            this.ctrlPersonCard1.EnableEditPersonLinkVisibility = true;[m
+             this.ctrlPersonCard1.Location = new System.Drawing.Point(12, 12);[m
+             this.ctrlPersonCard1.Name = "ctrlPersonCard1";[m
+             this.ctrlPersonCard1.Size = new System.Drawing.Size(1208, 419);[m
+             this.ctrlPersonCard1.TabIndex = 0;[m
+             // [m
+[32m+[m[32m            // applicationsToolStripMenuItem[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.applicationsToolStripMenuItem.Image = global::DVLD.Properties.Resources.Applications2;[m
+[32m+[m[32m            this.applicationsToolStripMenuItem.Name = "applicationsToolStripMenuItem";[m
+[32m+[m[32m            this.applicationsToolStripMenuItem.Size = new System.Drawing.Size(163, 36);[m
+[32m+[m[32m            this.applicationsToolStripMenuItem.Text = "Applications";[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // peopleToolStripMenuItem[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.peopleToolStripMenuItem.Image = global::DVLD.Properties.Resources.People;[m
+[32m+[m[32m            this.peopleToolStripMenuItem.Name = "peopleToolStripMenuItem";[m
+[32m+[m[32m            this.peopleToolStripMenuItem.Size = new System.Drawing.Size(110, 36);[m
+[32m+[m[32m            this.peopleToolStripMenuItem.Text = "People";[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // driversToolStripMenuItem[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.driversToolStripMenuItem.Image = global::DVLD.Properties.Resources.Car;[m
+[32m+[m[32m            this.driversToolStripMenuItem.Name = "driversToolStripMenuItem";[m
+[32m+[m[32m            this.driversToolStripMenuItem.Size = new System.Drawing.Size(118, 36);[m
+[32m+[m[32m            this.driversToolStripMenuItem.Text = "Drivers";[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // usersToolStripMenuItem[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.usersToolStripMenuItem.Image = global::DVLD.Properties.Resources.Users;[m
+[32m+[m[32m            this.usersToolStripMenuItem.Name = "usersToolStripMenuItem";[m
+[32m+[m[32m            this.usersToolStripMenuItem.Size = new System.Drawing.Size(103, 36);[m
+[32m+[m[32m            this.usersToolStripMenuItem.Text = "Users";[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // accountSettingsToolStripMenuItem[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.accountSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {[m
+[32m+[m[32m            this.currentUserInfoToolStripMenuItem,[m
+[32m+[m[32m            this.tsmChangePassword,[m
+[32m+[m[32m            this.tsmSignOut});[m
+[32m+[m[32m            this.accountSettingsToolStripMenuItem.Image = global::DVLD.Properties.Resources.Settings;[m
+[32m+[m[32m            this.accountSettingsToolStripMenuItem.Name = "accountSettingsToolStripMenuItem";[m
+[32m+[m[32m            this.accountSettingsToolStripMenuItem.Size = new System.Drawing.Size(203, 36);[m
+[32m+[m[32m            this.accountSettingsToolStripMenuItem.Text = "Account Settings";[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // currentUserInfoToolStripMenuItem[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.currentUserInfoToolStripMenuItem.Image = global::DVLD.Properties.Resources.PersonDetails_32;[m
+[32m+[m[32m            this.currentUserInfoToolStripMenuItem.Name = "currentUserInfoToolStripMenuItem";[m
+[32m+[m[32m            this.currentUserInfoToolStripMenuItem.Size = new System.Drawing.Size(258, 38);[m
+[32m+[m[32m            this.currentUserInfoToolStripMenuItem.Text = "Current User Info";[m
+[32m+[m[32m            this.currentUserInfoToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // tsmChangePassword[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.tsmChangePassword.Image = global::DVLD.Properties.Resources.Keys;[m
+[32m+[m[32m            this.tsmChangePassword.Name = "tsmChangePassword";[m
+[32m+[m[32m            this.tsmChangePassword.Size = new System.Drawing.Size(258, 38);[m
+[32m+[m[32m            this.tsmChangePassword.Text = "Change Password";[m
+[32m+[m[32m            this.tsmChangePassword.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // tsmSignOut[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.tsmSignOut.Image = global::DVLD.Properties.Resources.SignOut;[m
+[32m+[m[32m            this.tsmSignOut.Name = "tsmSignOut";[m
+[32m+[m[32m            this.tsmSignOut.Size = new System.Drawing.Size(258, 38);[m
+[32m+[m[32m            this.tsmSignOut.Text = "Sign Out";[m
+[32m+[m[32m            this.tsmSignOut.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // cmsMain[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.cmsMain.BackColor = System.Drawing.Color.Transparent;[m
+[32m+[m[32m            this.cmsMain.Font = new System.Drawing.Font("Magneto", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));[m
+[32m+[m[32m            this.cmsMain.ImageScalingSize = new System.Drawing.Size(32, 32);[m
+[32m+[m[32m            this.cmsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {[m
+[32m+[m[32m            this.applicationsToolStripMenuItem,[m
+[32m+[m[32m            this.peopleToolStripMenuItem,[m
+[32m+[m[32m            this.driversToolStripMenuItem,[m
+[32m+[m[32m            this.usersToolStripMenuItem,[m
+[32m+[m[32m            this.accountSettingsToolStripMenuItem});[m
+[32m+[m[32m            this.cmsMain.Location = new System.Drawing.Point(0, 0);[m
+[32m+[m[32m            this.cmsMain.Name = "cmsMain";[m
+[32m+[m[32m            this.cmsMain.Size = new System.Drawing.Size(1352, 40);[m
+[32m+[m[32m            this.cmsMain.TabIndex = 1;[m
+[32m+[m[32m            this.cmsMain.Text = "menuStrip1";[m
+[32m+[m[32m            //[m[41m [m
+             // frmTestPersonControlCard[m
+             // [m
+             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);[m
+             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;[m
+             this.ClientSize = new System.Drawing.Size(1352, 680);[m
+[32m+[m[32m            this.Controls.Add(this.cmsMain);[m
+             this.Controls.Add(this.ctrlPersonCard1);[m
+             this.Name = "frmTestPersonControlCard";[m
+             this.Text = "frmTestPersonControlCard";[m
+             this.Load += new System.EventHandler(this.frmTestPersonControlCard_Load);[m
+[32m+[m[32m            this.cmsMain.ResumeLayout(false);[m
+[32m+[m[32m            this.cmsMain.PerformLayout();[m
+             this.ResumeLayout(false);[m
+[32m+[m[32m            this.PerformLayout();[m
+ [m
+         }[m
+ [m
+         #endregion[m
+ [m
+         private Controls.ctrlPersonCard ctrlPersonCard1;[m
+[32m+[m[32m        private System.Windows.Forms.ToolStripMenuItem applicationsToolStripMenuItem;[m
+[32m+[m[32m        private System.Windows.Forms.ToolStripMenuItem peopleToolStripMenuItem;[m
+[32m+[m[32m        private System.Windows.Forms.ToolStripMenuItem driversToolStripMenuItem;[m
+[32m+[m[32m        private System.Windows.Forms.ToolStripMenuItem usersToolStripMenuItem;[m
+[32m+[m[32m        private System.Windows.Forms.ToolStripMenuItem accountSettingsToolStripMenuItem;[m
+[32m+[m[32m        private System.Windows.Forms.ToolStripMenuItem currentUserInfoToolStripMenuItem;[m
+[32m+[m[32m        private System.Windows.Forms.ToolStripMenuItem tsmChangePassword;[m
+[32m+[m[32m        private System.Windows.Forms.ToolStripMenuItem tsmSignOut;[m
+[32m+[m[32m        private System.Windows.Forms.MenuStrip cmsMain;[m
+     }[m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/DVLD/FormTests/User control tests/frmTestPersonControlCard.resx b/DVLD/FormTests/User control tests/frmTestPersonControlCard.resx[m
+[1mindex 1af7de1..8f045a9 100644[m
+[1m--- a/DVLD/FormTests/User control tests/frmTestPersonControlCard.resx[m	
+[1m+++ b/DVLD/FormTests/User control tests/frmTestPersonControlCard.resx[m	
+[36m@@ -117,4 +117,7 @@[m
+   <resheader name="writer">[m
+     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>[m
+   </resheader>[m
+[32m+[m[32m  <metadata name="cmsMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">[m
+[32m+[m[32m    <value>17, 17</value>[m
+[32m+[m[32m  </metadata>[m
+ </root>[m
+\ No newline at end of file[m
+[1mdiff --git a/DVLD/LogIn/frmLogin.Designer.cs b/DVLD/LogIn/frmLogin.Designer.cs[m
+[1mindex 058a741..c6a75f0 100644[m
+[1m--- a/DVLD/LogIn/frmLogin.Designer.cs[m
+[1m+++ b/DVLD/LogIn/frmLogin.Designer.cs[m
+[36m@@ -29,11 +29,229 @@[m
+         private void InitializeComponent()[m
+         {[m
+             this.components = new System.ComponentModel.Container();[m
+[32m+[m[32m            this.txtUserName = new Guna.UI2.WinForms.Guna2TextBox();[m
+[32m+[m[32m            this.lblUserNametag = new Guna.UI2.WinForms.Guna2HtmlLabel();[m
+[32m+[m[32m            this.lblPassword = new Guna.UI2.WinForms.Guna2HtmlLabel();[m
+[32m+[m[32m            this.txtPassword = new Guna.UI2.WinForms.Guna2TextBox();[m
+[32m+[m[32m            this.CkRememberMe = new Guna.UI2.WinForms.Guna2CheckBox();[m
+[32m+[m[32m            this.btnLogin = new Guna.UI2.WinForms.Guna2GradientButton();[m
+[32m+[m[32m            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);[m
+[32m+[m[32m            this.pblogin = new System.Windows.Forms.PictureBox();[m
+[32m+[m[32m            this.btnExit = new Guna.UI2.WinForms.Guna2CircleButton();[m
+[32m+[m[32m            this.pbpasswordimage = new Guna.UI2.WinForms.Guna2CirclePictureBox();[m
+[32m+[m[32m            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();[m
+[32m+[m[32m            ((System.ComponentModel.ISupportInitialize)(this.pblogin)).BeginInit();[m
+[32m+[m[32m            ((System.ComponentModel.ISupportInitialize)(this.pbpasswordimage)).BeginInit();[m
+[32m+[m[32m            this.SuspendLayout();[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // txtUserName[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.txtUserName.BorderColor = System.Drawing.Color.RoyalBlue;[m
+[32m+[m[32m            this.txtUserName.BorderRadius = 6;[m
+[32m+[m[32m            this.txtUserName.Cursor = System.Windows.Forms.Cursors.IBeam;[m
+[32m+[m[32m            this.txtUserName.DefaultText = "";[m
+[32m+[m[32m            this.txtUserName.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));[m
+[32m+[m[32m            this.txtUserName.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));[m
+[32m+[m[32m            this.txtUserName.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));[m
+[32m+[m[32m            this.txtUserName.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));[m
+[32m+[m[32m            this.txtUserName.FillColor = System.Drawing.Color.Lavender;[m
+[32m+[m[32m            this.txtUserName.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));[m
+[32m+[m[32m            this.txtUserName.FocusedState.FillColor = System.Drawing.Color.Lavender;[m
+[32m+[m[32m            this.txtUserName.Font = new System.Drawing.Font("Segoe UI", 9F);[m
+[32m+[m[32m            this.txtUserName.ForeColor = System.Drawing.Color.Navy;[m
+[32m+[m[32m            this.txtUserName.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));[m
+[32m+[m[32m            this.txtUserName.Location = new System.Drawing.Point(717, 263);[m
+[32m+[m[32m            this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);[m
+[32m+[m[32m            this.txtUserName.Name = "txtUserName";[m
+[32m+[m[32m            this.txtUserName.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));[m
+[32m+[m[32m            this.txtUserName.PlaceholderText = "";[m
+[32m+[m[32m            this.txtUserName.SelectedText = "";[m
+[32m+[m[32m            this.txtUserName.Size = new System.Drawing.Size(229, 28);[m
+[32m+[m[32m            this.txtUserName.TabIndex = 2;[m
+[32m+[m[32m            this.txtUserName.TextChanged += new System.EventHandler(this.txtUserName_TextChanged);[m
+[32m+[m[32m            this.txtUserName.Validating += new System.ComponentModel.CancelEventHandler(this.txtUserName_Validating);[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // lblUserNametag[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.lblUserNametag.BackColor = System.Drawing.Color.Transparent;[m
+[32m+[m[32m            this.lblUserNametag.Font = new System.Drawing.Font("Matura MT Script Capitals", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));[m
+[32m+[m[32m            this.lblUserNametag.Location = new System.Drawing.Point(554, 263);[m
+[32m+[m[32m            this.lblUserNametag.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);[m
+[32m+[m[32m            this.lblUserNametag.Name = "lblUserNametag";[m
+[32m+[m[32m            this.lblUserNametag.Size = new System.Drawing.Size(142, 28);[m
+[32m+[m[32m            this.lblUserNametag.TabIndex = 3;[m
+[32m+[m[32m            this.lblUserNametag.Text = "User Name :";[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // lblPassword[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.lblPassword.BackColor = System.Drawing.Color.Transparent;[m
+[32m+[m[32m            this.lblPassword.Font = new System.Drawing.Font("Matura MT Script Capitals", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));[m
+[32m+[m[32m            this.lblPassword.Location = new System.Drawing.Point(579, 315);[m
+[32m+[m[32m            this.lblPassword.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);[m
+[32m+[m[32m            this.lblPassword.Name = "lblPassword";[m
+[32m+[m[32m            this.lblPassword.Size = new System.Drawing.Size(117, 28);[m
+[32m+[m[32m            this.lblPassword.TabIndex = 4;[m
+[32m+[m[32m            this.lblPassword.Text = "Password :";[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // txtPassword[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.txtPassword.BackColor = System.Drawing.Color.LightSteelBlue;[m
+[32m+[m[32m            this.txtPassword.BorderColor = System.Drawing.Color.RoyalBlue;[m
+[32m+[m[32m            this.txtPassword.BorderRadius = 6;[m
+[32m+[m[32m            this.txtPassword.Cursor = System.Windows.Forms.Cursors.IBeam;[m
+[32m+[m[32m            this.txtPassword.DefaultText = "";[m
+[32m+[m[32m            this.txtPassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));[m
+[32m+[m[32m            this.txtPassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));[m
+[32m+[m[32m            this.txtPassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));[m
+[32m+[m[32m            this.txtPassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));[m
+[32m+[m[32m            this.txtPassword.FillColor = System.Drawing.Color.Lavender;[m
+[32m+[m[32m            this.txtPassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));[m
+[32m+[m[32m            this.txtPassword.FocusedState.FillColor = System.Drawing.Color.Lavender;[m
+[32m+[m[32m            this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 9F);[m
+[32m+[m[32m            this.txtPassword.ForeColor = System.Drawing.Color.Navy;[m
+[32m+[m[32m            this.txtPassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));[m
+[32m+[m[32m            this.txtPassword.Location = new System.Drawing.Point(717, 315);[m
+[32m+[m[32m            this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);[m
+[32m+[m[32m            this.txtPassword.Name = "txtPassword";[m
+[32m+[m[32m            this.txtPassword.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));[m
+[32m+[m[32m            this.txtPassword.PlaceholderText = "";[m
+[32m+[m[32m            this.txtPassword.SelectedText = "";[m
+[32m+[m[32m            this.txtPassword.Size = new System.Drawing.Size(229, 28);[m
+[32m+[m[32m            this.txtPassword.TabIndex = 5;[m
+[32m+[m[32m            this.txtPassword.UseSystemPasswordChar = true;[m
+[32m+[m[32m            this.txtPassword.Validating += new System.ComponentModel.CancelEventHandler(this.txtPassword_Validating);[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // CkRememberMe[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.CkRememberMe.AutoSize = true;[m
+[32m+[m[32m            this.CkRememberMe.CheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));[m
+[32m+[m[32m            this.CkRememberMe.CheckedState.BorderRadius = 0;[m
+[32m+[m[32m            this.CkRememberMe.CheckedState.BorderThickness = 0;[m
+[32m+[m[32m            this.CkRememberMe.CheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));[m
+[32m+[m[32m            this.CkRememberMe.CheckMarkColor = System.Drawing.Color.DimGray;[m
+[32m+[m[32m            this.CkRememberMe.Location = new System.Drawing.Point(766, 350);[m
+[32m+[m[32m            this.CkRememberMe.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);[m
+[32m+[m[32m            this.CkRememberMe.Name = "CkRememberMe";[m
+[32m+[m[32m            this.CkRememberMe.Size = new System.Drawing.Size(120, 21);[m
+[32m+[m[32m            this.CkRememberMe.TabIndex = 6;[m
+[32m+[m[32m            this.CkRememberMe.Text = "Remember me";[m
+[32m+[m[32m            this.CkRememberMe.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));[m
+[32m+[m[32m            this.CkRememberMe.UncheckedState.BorderRadius = 0;[m
+[32m+[m[32m            this.CkRememberMe.UncheckedState.BorderThickness = 0;[m
+[32m+[m[32m            this.CkRememberMe.UncheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // btnLogin[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.btnLogin.BorderColor = System.Drawing.Color.Navy;[m
+[32m+[m[32m            this.btnLogin.BorderRadius = 10;[m
+[32m+[m[32m            this.btnLogin.DisabledState.BorderColor = System.Drawing.Color.DarkGray;[m
+[32m+[m[32m            this.btnLogin.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;[m
+[32m+[m[32m            this.btnLogin.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));[m
+[32m+[m[32m            this.btnLogin.DisabledState.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));[m
+[32m+[m[32m            this.btnLogin.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));[m
+[32m+[m[32m            this.btnLogin.FillColor = System.Drawing.Color.LightCyan;[m
+[32m+[m[32m            this.btnLogin.FillColor2 = System.Drawing.Color.MidnightBlue;[m
+[32m+[m[32m            this.btnLogin.Font = new System.Drawing.Font("Matura MT Script Capitals", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));[m
+[32m+[m[32m            this.btnLogin.ForeColor = System.Drawing.Color.DarkBlue;[m
+[32m+[m[32m            this.btnLogin.Location = new System.Drawing.Point(766, 430);[m
+[32m+[m[32m            this.btnLogin.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);[m
+[32m+[m[32m            this.btnLogin.Name = "btnLogin";[m
+[32m+[m[32m            this.btnLogin.Size = new System.Drawing.Size(180, 46);[m
+[32m+[m[32m            this.btnLogin.TabIndex = 7;[m
+[32m+[m[32m            this.btnLogin.Text = "Log In";[m
+[32m+[m[32m            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // errorProvider1[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.errorProvider1.ContainerControl = this;[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // pblogin[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.pblogin.BackgroundImage = global::DVLD.Properties.Resources.Login;[m
+[32m+[m[32m            this.pblogin.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;[m
+[32m+[m[32m            this.pblogin.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;[m
+[32m+[m[32m            this.pblogin.Location = new System.Drawing.Point(-9, 0);[m
+[32m+[m[32m            this.pblogin.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);[m
+[32m+[m[32m            this.pblogin.MinimumSize = new System.Drawing.Size(559, 724);[m
+[32m+[m[32m            this.pblogin.Name = "pblogin";[m
+[32m+[m[32m            this.pblogin.Size = new System.Drawing.Size(559, 775);[m
+[32m+[m[32m            this.pblogin.TabIndex = 1;[m
+[32m+[m[32m            this.pblogin.TabStop = false;[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // btnExit[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.btnExit.BackColor = System.Drawing.Color.Transparent;[m
+[32m+[m[32m            this.btnExit.BackgroundImage = global::DVLD.Properties.Resources.closeBlack32;[m
+[32m+[m[32m            this.btnExit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;[m
+[32m+[m[32m            this.btnExit.DisabledState.BorderColor = System.Drawing.Color.DarkGray;[m
+[32m+[m[32m            this.btnExit.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;[m
+[32m+[m[32m            this.btnExit.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));[m
+[32m+[m[32m            this.btnExit.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));[m
+[32m+[m[32m            this.btnExit.FillColor = System.Drawing.Color.Transparent;[m
+[32m+[m[32m            this.btnExit.Font = new System.Drawing.Font("Segoe UI", 9F);[m
+[32m+[m[32m            this.btnExit.ForeColor = System.Drawing.Color.Black;[m
+[32m+[m[32m            this.btnExit.Location = new System.Drawing.Point(962, 12);[m
+[32m+[m[32m            this.btnExit.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);[m
+[32m+[m[32m            this.btnExit.Name = "btnExit";[m
+[32m+[m[32m            this.btnExit.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;[m
+[32m+[m[32m            this.btnExit.Size = new System.Drawing.Size(27, 31);[m
+[32m+[m[32m            this.btnExit.TabIndex = 0;[m
+[32m+[m[32m            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // pbpasswordimage[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.pbpasswordimage.FillColor = System.Drawing.Color.Transparent;[m
+[32m+[m[32m            this.pbpasswordimage.Image = global::DVLD.Properties.Resources.closedeye;[m
+[32m+[m[32m            this.pbpasswordimage.ImageRotate = 0F;[m
+[32m+[m[32m            this.pbpasswordimage.Location = new System.Drawing.Point(955, 315);[m
+[32m+[m[32m            this.pbpasswordimage.Name = "pbpasswordimage";[m
+[32m+[m[32m            this.pbpasswordimage.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;[m
+[32m+[m[32m            this.pbpasswordimage.Size = new System.Drawing.Size(34, 35);[m
+[32m+[m[32m            this.pbpasswordimage.TabIndex = 9;[m
+[32m+[m[32m            this.pbpasswordimage.TabStop = false;[m
+[32m+[m[32m            this.pbpasswordimage.Click += new System.EventHandler(this.pbpasswordimage_Click);[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // frmLogin[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);[m
+             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;[m
+[31m-            this.ClientSize = new System.Drawing.Size(800, 450);[m
+[32m+[m[32m            this.BackColor = System.Drawing.Color.LightSteelBlue;[m
+[32m+[m[32m            this.ClientSize = new System.Drawing.Size(1002, 772);[m
+[32m+[m[32m            this.ControlBox = false;[m
+[32m+[m[32m            this.Controls.Add(this.pbpasswordimage);[m
+[32m+[m[32m            this.Controls.Add(this.btnLogin);[m
+[32m+[m[32m            this.Controls.Add(this.CkRememberMe);[m
+[32m+[m[32m            this.Controls.Add(this.txtPassword);[m
+[32m+[m[32m            this.Controls.Add(this.lblPassword);[m
+[32m+[m[32m            this.Controls.Add(this.lblUserNametag);[m
+[32m+[m[32m            this.Controls.Add(this.txtUserName);[m
+[32m+[m[32m            this.Controls.Add(this.pblogin);[m
+[32m+[m[32m            this.Controls.Add(this.btnExit);[m
+[32m+[m[32m            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;[m
+[32m+[m[32m            this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);[m
+[32m+[m[32m            this.Name = "frmLogin";[m
+[32m+[m[32m            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;[m
+             this.Text = "frmLogin";[m
+[32m+[m[32m            this.Load += new System.EventHandler(this.frmLogin_Load);[m
+[32m+[m[32m            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();[m
+[32m+[m[32m            ((System.ComponentModel.ISupportInitialize)(this.pblogin)).EndInit();[m
+[32m+[m[32m            ((System.ComponentModel.ISupportInitialize)(this.pbpasswordimage)).EndInit();[m
+[32m+[m[32m            this.ResumeLayout(false);[m
+[32m+[m[32m            this.PerformLayout();[m
+[32m+[m
+         }[m
+ [m
+         #endregion[m
+[32m+[m
+[32m+[m[32m        private Guna.UI2.WinForms.Guna2CircleButton btnExit;[m
+[32m+[m[32m        private System.Windows.Forms.PictureBox pblogin;[m
+[32m+[m[32m        private Guna.UI2.WinForms.Guna2TextBox txtUserName;[m
+[32m+[m[32m        private Guna.UI2.WinForms.Guna2HtmlLabel lblUserNametag;[m
+[32m+[m[32m        private Guna.UI2.WinForms.Guna2HtmlLabel lblPassword;[m
+[32m+[m[32m        private Guna.UI2.WinForms.Guna2TextBox txtPassword;[m
+[32m+[m[32m        private Guna.UI2.WinForms.Guna2CheckBox CkRememberMe;[m
+[32m+[m[32m        private Guna.UI2.WinForms.Guna2GradientButton btnLogin;[m
+[32m+[m[32m        private System.Windows.Forms.ErrorProvider errorProvider1;[m
+[32m+[m[32m        private Guna.UI2.WinForms.Guna2CirclePictureBox pbpasswordimage;[m
+     }[m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/DVLD/LogIn/frmLogin.cs b/DVLD/LogIn/frmLogin.cs[m
+[1mindex 7518fe4..83f8c60 100644[m
+[1m--- a/DVLD/LogIn/frmLogin.cs[m
+[1m+++ b/DVLD/LogIn/frmLogin.cs[m
+[36m@@ -1,4 +1,6 @@[m
+[31m-﻿using System;[m
+[32m+[m[32m﻿using DVLD.GlobalClasses;[m
+[32m+[m[32musing DVLD_Business.Users;[m
+[32m+[m[32musing System;[m
+ using System.Collections.Generic;[m
+ using System.ComponentModel;[m
+ using System.Data;[m
+[36m@@ -15,6 +17,144 @@[m [mnamespace DVLD.LogIn[m
+         public frmLogin()[m
+         {[m
+             InitializeComponent();[m
+[32m+[m[41m        [m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void btnExit_Click(object sender, EventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            this.Close();[m[41m   [m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void frmLogin_Load(object sender, EventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            string UserName = "";[m
+[32m+[m[32m            string Password = "";[m[41m   [m
+[32m+[m
+[32m+[m[32m            if(clsGlobal.GetStoredCredential(ref UserName, ref Password))[m
+[32m+[m[32m            {[m
+[32m+[m[32m                txtUserName.Text = UserName;[m
+[32m+[m[32m                txtPassword.Text = Password;[m
+[32m+[m[32m                CkRememberMe.Checked = true;[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m            {[m
+[32m+[m[32m                CkRememberMe.Checked = false;[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void txtUserName_Validating(object sender, CancelEventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m
+[32m+[m[32m            if(string.IsNullOrWhiteSpace(txtUserName.Text.Trim()))[m
+[32m+[m[32m            {[m
+[32m+[m[32m                e.Cancel = true;[m
+[32m+[m[32m                txtUserName.Focus();[m
+[32m+[m[32m                errorProvider1.SetError(txtUserName, "User Name Can't be empty");[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m            {[m
+[32m+[m[32m                e.Cancel = false;[m
+[32m+[m[32m                errorProvider1.SetError(txtUserName, null);[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void txtUserName_TextChanged(object sender, EventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void txtPassword_Validating(object sender, CancelEventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            if(string.IsNullOrWhiteSpace(txtPassword.Text.Trim()))[m
+[32m+[m[32m            {[m
+[32m+[m[32m                e.Cancel = true;[m
+[32m+[m[32m                txtPassword.Focus();[m
+[32m+[m[32m                errorProvider1.SetError(txtPassword, "Password Can't be empty");[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m            {[m
+[32m+[m[32m                e.Cancel = false;[m
+[32m+[m[32m                errorProvider1.SetError(txtPassword, null);[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void btnLogin_Click(object sender, EventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m
+[32m+[m
+[32m+[m[32m            if(!this.ValidateChildren())[m
+[32m+[m[32m            {[m
+[32m+[m[41m             [m
+[32m+[m[32m                MessageBox.Show("Please fill all required fields", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);[m[41m [m
+[32m+[m[32m            }[m
+[32m+[m[32m            clsUser User = clsUser.Find(txtUserName.Text.Trim(), txtPassword.Text.Trim());[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32m            if (User != null)[m
+[32m+[m[32m            {[m
+[32m+[m
+[32m+[m
+[32m+[m[32m                if(!User.UserDTO.IsActive)[m
+[32m+[m[32m                {[m
+[32m+[m[32m                    MessageBox.Show("User is Inactive. Please contact Admin", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);[m
+[32m+[m[32m                    return;[m
+[32m+[m[32m                }[m
+[32m+[m[41m               [m
+[32m+[m
+[32m+[m[32m                if (CkRememberMe.Checked==true)[m
+[32m+[m[32m                {[m
+[32m+[m[32m                   clsGlobal.RememberUsernameAndPassword(txtUserName.Text.Trim(), txtPassword.Text.Trim());[m
+[32m+[m[32m                }[m
+[32m+[m[32m                else[m
+[32m+[m[32m                {[m
+[32m+[m[32m                    clsGlobal.RememberUsernameAndPassword("", "");[m
+[32m+[m[32m                }[m
+[32m+[m
+[32m+[m
+[32m+[m[32m                   clsGlobal.CurrentUser = User;[m
+[32m+[m
+[32m+[m[32m                this.Hide();[m
+[32m+[m[32m                frmMain MainForm = new frmMain(this);[m[41m    [m
+[32m+[m[32m                MainForm.ShowDialog();[m[41m  [m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m            {[m
+[32m+[m[32m                MessageBox.Show("Invalid User Name or Password", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);[m
+[32m+[m[32m                return;[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void btnPassImage_Click(object sender, EventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m
+[32m+[m[41m         [m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void pbpasswordimage_Click(object sender, EventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m[41m            [m
+[32m+[m
+[32m+[m
+[32m+[m[32m            txtPassword.UseSystemPasswordChar =!txtPassword.UseSystemPasswordChar;[m
+[32m+[m
+[32m+[m[41m          [m
+[32m+[m
+[32m+[m[32m            pbpasswordimage.Image = txtPassword.UseSystemPasswordChar ? Properties.Resources.closedeye : Properties.Resources.opendeye;[m
+[32m+[m[32m            txtPassword.Focus();[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/DVLD/LogIn/frmLogin.resx b/DVLD/LogIn/frmLogin.resx[m
+[1mindex 1af7de1..3ee7035 100644[m
+[1m--- a/DVLD/LogIn/frmLogin.resx[m
+[1m+++ b/DVLD/LogIn/frmLogin.resx[m
+[36m@@ -117,4 +117,7 @@[m
+   <resheader name="writer">[m
+     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>[m
+   </resheader>[m
+[32m+[m[32m  <metadata name="errorProvider1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">[m
+[32m+[m[32m    <value>17, 17</value>[m
+[32m+[m[32m  </metadata>[m
+ </root>[m
+\ No newline at end of file[m
+[1mdiff --git a/DVLD/Main/Form1.Designer.cs b/DVLD/Main/Form1.Designer.cs[m
+[1mdeleted file mode 100644[m
+[1mindex e8a99e6..0000000[m
+[1m--- a/DVLD/Main/Form1.Designer.cs[m
+[1m+++ /dev/null[m
+[36m@@ -1,40 +0,0 @@[m
+[31m-﻿namespace DVLD[m
+[31m-{[m
+[31m-    partial class Form1[m
+[31m-    {[m
+[31m-        /// <summary>[m
+[31m-        /// Required designer variable.[m
+[31m-        /// </summary>[m
+[31m-        private System.ComponentModel.IContainer components = null;[m
+[31m-[m
+[31m-        /// <summary>[m
+[31m-        /// Clean up any resources being used.[m
+[31m-        /// </summary>[m
+[31m-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>[m
+[31m-        protected override void Dispose(bool disposing)[m
+[31m-        {[m
+[31m-            if (disposing && (components != null))[m
+[31m-            {[m
+[31m-                components.Dispose();[m
+[31m-            }[m
+[31m-            base.Dispose(disposing);[m
+[31m-        }[m
+[31m-[m
+[31m-        #region Windows Form Designer generated code[m
+[31m-[m
+[31m-        /// <summary>[m
+[31m-        /// Required method for Designer support - do not modify[m
+[31m-        /// the contents of this method with the code editor.[m
+[31m-        /// </summary>[m
+[31m-        private void InitializeComponent()[m
+[31m-        {[m
+[31m-            this.components = new System.ComponentModel.Container();[m
+[31m-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;[m
+[31m-            this.ClientSize = new System.Drawing.Size(800, 450);[m
+[31m-            this.Text = "Form1";[m
+[31m-        }[m
+[31m-[m
+[31m-        #endregion[m
+[31m-    }[m
+[31m-}[m
+[31m-[m
+[1mdiff --git a/DVLD/Main/Form1.cs b/DVLD/Main/Form1.cs[m
+[1mdeleted file mode 100644[m
+[1mindex 1663c34..0000000[m
+[1m--- a/DVLD/Main/Form1.cs[m
+[1m+++ /dev/null[m
+[36m@@ -1,20 +0,0 @@[m
+[31m-﻿using System;[m
+[31m-using System.Collections.Generic;[m
+[31m-using System.ComponentModel;[m
+[31m-using System.Data;[m
+[31m-using System.Drawing;[m
+[31m-using System.Linq;[m
+[31m-using System.Text;[m
+[31m-using System.Threading.Tasks;[m
+[31m-using System.Windows.Forms;[m
+[31m-[m
+[31m-namespace DVLD[m
+[31m-{[m
+[31m-    public partial class Form1 : Form[m
+[31m-    {[m
+[31m-        public Form1()[m
+[31m-        {[m
+[31m-            InitializeComponent();[m
+[31m-        }[m
+[31m-    }[m
+[31m-}[m
+[1mdiff --git a/DVLD/Main/Program.cs b/DVLD/Main/Program.cs[m
+[1mindex f082267..a79b802 100644[m
+[1m--- a/DVLD/Main/Program.cs[m
+[1m+++ b/DVLD/Main/Program.cs[m
+[36m@@ -2,6 +2,7 @@[m
+ using DVLD.FormTests.User_control_tests;[m
+ using DVLD.FromTests;[m
+ using DVLD.FromTests.User_control_tests;[m
+[32m+[m[32musing DVLD.LogIn;[m
+ using DVLD.People;[m
+ using DVLD.Users;[m
+ using System;[m
+[36m@@ -29,7 +30,7 @@[m [mnamespace DVLD[m
+ [m
+           [m
+             [m
+[31m-            Application.Run(new frmListUsers());[m
+[32m+[m[32m            Application.Run(new frmLogin());[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/DVLD/Properties/Resources.Designer.cs b/DVLD/Properties/Resources.Designer.cs[m
+[1mindex b119951..d224776 100644[m
+[1m--- a/DVLD/Properties/Resources.Designer.cs[m
+[1m+++ b/DVLD/Properties/Resources.Designer.cs[m
+[36m@@ -190,6 +190,26 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap Applications1 {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("Applications1", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap Applications2 {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("Applications2", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -230,6 +250,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap Car {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("Car", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -280,6 +310,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap closedeye {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("closedeye", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -400,6 +440,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap driver_license {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("driver-license", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -440,6 +490,26 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap DrivingLicenseType {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("DrivingLicenseType", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap DrivingLicenseType1 {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("DrivingLicenseType1", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -520,6 +590,26 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap icons8_driving_license_64 {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("icons8-driving-license-64", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap icons8_locked_user_64 {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("icons8-locked-user-64", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -550,6 +640,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap Keys {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("Keys", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -620,6 +720,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap Login {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("Login", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -640,6 +750,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap MainPhoto {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("MainPhoto", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -770,6 +890,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap opendeye {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("opendeye", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -800,6 +930,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap People {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("People", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -940,6 +1080,26 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap Relpcae {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("Relpcae", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap Renew {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("Renew", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -950,6 +1110,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap resume {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("resume", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -1020,6 +1190,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap Settings {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("Settings", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -1050,6 +1230,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap SignOut {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("SignOut", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -1110,6 +1300,26 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap TestTypes {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("TestTypes", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap unlock {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("unlock", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[36m@@ -1120,6 +1330,16 @@[m [mnamespace DVLD.Properties {[m
+             }[m
+         }[m
+         [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        internal static System.Drawing.Bitmap Users {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                object obj = ResourceManager.GetObject("Users", resourceCulture);[m
+[32m+[m[32m                return ((System.Drawing.Bitmap)(obj));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+         /// <summary>[m
+         ///   Looks up a localized resource of type System.Drawing.Bitmap.[m
+         /// </summary>[m
+[1mdiff --git a/DVLD/Properties/Resources.resx b/DVLD/Properties/Resources.resx[m
+[1mindex 4e10303..060ba2f 100644[m
+[1m--- a/DVLD/Properties/Resources.resx[m
+[1m+++ b/DVLD/Properties/Resources.resx[m
+[36m@@ -124,14 +124,17 @@[m
+   <data name="Detain 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Detain 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Schedule Test 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Schedule Test 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Close 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Close 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Applications" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Applications.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Phone 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Phone 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Woman 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Woman 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Vision Test Schdule" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Vision Test Schdule.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Users" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Users.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="icons8-number-sign-67" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\icons8-number-sign-67.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -145,6 +148,12 @@[m
+   <data name="Logo Final" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Logo Final.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="resume" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\resume.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Drivers 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Drivers 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="License Type 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\License Type 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[36m@@ -154,6 +163,9 @@[m
+   <data name="ApplicationTitle" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\ApplicationTitle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="Renew" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Renew.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="Driver Main" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Driver Main.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[36m@@ -166,11 +178,14 @@[m
+   <data name="Detain 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Detain 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="Next 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Next 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="International 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\International 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Drivers 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Drivers 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Written Test 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Written Test 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="cross 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\cross 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -178,12 +193,12 @@[m
+   <data name="Written Test 32 Sechdule" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Written Test 32 Sechdule.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Written Test 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Written Test 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[31m-  </data>[m
+   <data name="Release Detained License 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Release Detained License 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="DrivingLicenseType1" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\DrivingLicenseType1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="Damaged Driving License 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Damaged Driving License 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[36m@@ -193,26 +208,20 @@[m
+   <data name="LocalDriving License" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\LocalDriving License.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Written Test 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Written Test 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="opendeye" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\opendeye.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Detain 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Detain 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Add Person 401" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Add Person 401.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[31m-  </data>[m
+[31m-  <data name="Faild" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Faild.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[31m-  </data>[m
+   <data name="Test Type 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Test Type 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Man 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Man 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="New Driving License 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\New Driving License 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Add Person 401" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Add Person 401.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Applications 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Applications 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -220,9 +229,15 @@[m
+   <data name="Driver License 48" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Driver License 48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="TestTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\TestTypes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="Prev 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Prev 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="Applications" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Applications.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="Delete User 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Delete User 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[36m@@ -238,26 +253,44 @@[m
+   <data name="Application Types 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Application Types 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="driver-license" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\driver-license.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="call 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\call 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="People" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\People.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="Close 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Close 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Next 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Next 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Phone 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Phone 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="closedeye" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\closedeye.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="icons8-driving-license-64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\icons8-driving-license-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="send email 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\send email 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="account_settings 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\account_settings 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="Test 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Test 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Save 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Save 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Settings" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Settings.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Keys" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Keys.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Add Person 40" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Add Person 40.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="TestType 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\TestType 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -265,11 +298,8 @@[m
+   <data name="People 400" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\People 400.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="List 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\List 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[31m-  </data>[m
+[31m-  <data name="Email 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Email 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="users 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\users 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Detained Driving License 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Detained Driving License 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -301,14 +331,11 @@[m
+   <data name="PersonLicenseHistory 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\PersonLicenseHistory 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Add New User 72" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Add New User 72.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[31m-  </data>[m
+   <data name="wallpaper" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\wallpaper.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Delete 32 2" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Delete 32 2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="SearchPerson1" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\SearchPerson1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Person 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Person 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -316,9 +343,15 @@[m
+   <data name="PersonLicenseHistory 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\PersonLicenseHistory 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="Schedule Test 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Schedule Test 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="money 32 - 2" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\money 32 - 2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="Application Types 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Application Types 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="Cars 48" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Cars 48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[36m@@ -328,8 +361,11 @@[m
+   <data name="WallPaper2" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\WallPaper2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Close 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Close 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Written Test 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Written Test 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Email 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Email 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="ApplicationType" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\ApplicationType.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -343,17 +379,17 @@[m
+   <data name="Release Detained License 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Release Detained License 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="License View 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\License View 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="DrivingLicenseType" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\DrivingLicenseType.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="New Application 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\New Application 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="SignOut" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\SignOut.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Male 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Male 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="IconLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\IconLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="edit 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\edit 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="LicenseView 400" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\LicenseView 400.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -364,8 +400,11 @@[m
+   <data name="Retake Test 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Retake Test 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Local 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Local 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Delete 32 2" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Delete 32 2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="MainPhoto" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\MainPhoto.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="PersonDetails 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\PersonDetails 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -376,17 +415,20 @@[m
+   <data name="Users 2 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Users 2 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="edit 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\edit 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="IconLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\IconLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Passed" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Passed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="New Application 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\New Application 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Female 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Female 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Prev 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Prev 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Car" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Car.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Woman 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Woman 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Manage People" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Manage People.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -394,35 +436,38 @@[m
+   <data name="Vision 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Vision 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Next 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Next 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="icons8-locked-user-64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\icons8-locked-user-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Delete 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Delete 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="Faild" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Faild.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="Notes 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Notes 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Vision Test Schdule" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Vision Test Schdule.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[31m-  </data>[m
+   <data name="Address 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Address 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="IssueDrivingLicense 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\IssueDrivingLicense 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Schedule Test 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Schedule Test 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="License View 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\License View 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="closeBlack32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\closeBlack32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Add New User 72" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Add New User 72.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Country 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Country 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="users 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\users 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="closeBlack32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\closeBlack32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="List 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\List 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Vision Test 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Vision Test 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -433,14 +478,17 @@[m
+   <data name="People 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\People 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="account_settings 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\account_settings 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Prev 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Prev 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Release Detained License 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Release Detained License 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Application Types 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Application Types 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Login" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Login.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Schedule Test 512" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Schedule Test 512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="AddPerson 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\AddPerson 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -448,14 +496,26 @@[m
+   <data name="User 32 -2" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\User 32 -2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="Applications2" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Applications2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Passed" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Passed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Applications1" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Applications1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="sign_in 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\sign_in 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="People 64" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\People 64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="Add Person 40" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\Add Person 40.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="New Driving License 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\New Driving License 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="Save 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Save 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+   <data name="Renew Driving License 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\Renew Driving License 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[36m@@ -466,10 +526,16 @@[m
+   <data name="CloseBlack" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\CloseBlack.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[32m+[m[32m  <data name="Local 32" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Local 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+   <data name="SearchPerson" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+     <value>..\Resources\SearchPerson.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+[31m-  <data name="SearchPerson1" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[31m-    <value>..\Resources\SearchPerson1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  <data name="Relpcae" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\Relpcae.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+[32m+[m[32m  </data>[m
+[32m+[m[32m  <data name="unlock" type="System.Resources.ResXFileRef, System.Windows.Forms">[m
+[32m+[m[32m    <value>..\Resources\unlock.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>[m
+   </data>[m
+ </root>[m
+\ No newline at end of file[m
+[1mdiff --git a/DVLD/Properties/Settings.Designer.cs b/DVLD/Properties/Settings.Designer.cs[m
+[1mindex c1a20ce..8e9d119 100644[m
+[1m--- a/DVLD/Properties/Settings.Designer.cs[m
+[1m+++ b/DVLD/Properties/Settings.Designer.cs[m
+[36m@@ -8,23 +8,43 @@[m
+ // </auto-generated>[m
+ //------------------------------------------------------------------------------[m
+ [m
+[31m-namespace DVLD.Properties[m
+[31m-{[m
+[31m-[m
+[31m-[m
+[32m+[m[32mnamespace DVLD.Properties {[m
+[32m+[m[41m    [m
+[32m+[m[41m    [m
+     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()][m
+[31m-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")][m
+[31m-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase[m
+[31m-    {[m
+[31m-[m
+[32m+[m[32m    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")][m
+[32m+[m[32m    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {[m
+[32m+[m[41m        [m
+         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));[m
+[31m-[m
+[31m-        public static Settings Default[m
+[31m-        {[m
+[31m-            get[m
+[31m-            {[m
+[32m+[m[41m        [m
+[32m+[m[32m        public static Settings Default {[m
+[32m+[m[32m            get {[m
+                 return defaultInstance;[m
+             }[m
+         }[m
+[32m+[m[41m        [m
+[32m+[m[32m        [global::System.Configuration.UserScopedSettingAttribute()][m
+[32m+[m[32m        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()][m
+[32m+[m[32m        [global::System.Configuration.DefaultSettingValueAttribute("")][m
+[32m+[m[32m        public string UserName {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                return ((string)(this["UserName"]));[m
+[32m+[m[32m            }[m
+[32m+[m[32m            set {[m
+[32m+[m[32m                this["UserName"] = value;[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[32m        [global::System.Configuration.UserScopedSettingAttribute()][m
+[32m+[m[32m        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()][m
+[32m+[m[32m        [global::System.Configuration.DefaultSettingValueAttribute("")][m
+[32m+[m[32m        public string Password {[m
+[32m+[m[32m            get {[m
+[32m+[m[32m                return ((string)(this["Password"]));[m
+[32m+[m[32m            }[m
+[32m+[m[32m            set {[m
+[32m+[m[32m                this["Password"] = value;[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+     }[m
+ }[m
+[1mdiff --git a/DVLD/Properties/Settings.settings b/DVLD/Properties/Settings.settings[m
+[1mindex 3964565..18774ff 100644[m
+[1m--- a/DVLD/Properties/Settings.settings[m
+[1m+++ b/DVLD/Properties/Settings.settings[m
+[36m@@ -1,7 +1,12 @@[m
+ ﻿<?xml version='1.0' encoding='utf-8'?>[m
+[31m-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">[m
+[31m-  <Profiles>[m
+[31m-    <Profile Name="(Default)" />[m
+[31m-  </Profiles>[m
+[31m-  <Settings />[m
+[31m-</SettingsFile>[m
+[32m+[m[32m<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DVLD.Properties" GeneratedClassName="Settings">[m
+[32m+[m[32m  <Profiles />[m
+[32m+[m[32m  <Settings>[m
+[32m+[m[32m    <Setting Name="UserName" Type="System.String" Scope="User">[m
+[32m+[m[32m      <Value Profile="(Default)" />[m
+[32m+[m[32m    </Setting>[m
+[32m+[m[32m    <Setting Name="Password" Type="System.String" Scope="User">[m
+[32m+[m[32m      <Value Profile="(Default)" />[m
+[32m+[m[32m    </Setting>[m
+[32m+[m[32m  </Settings>[m
+[32m+[m[32m</SettingsFile>[m
+\ No newline at end of file[m
+[1mdiff --git a/DVLD/Resources/Applications.png b/DVLD/Resources/Applications.png[m
+[1mindex 1f24fd1..d7c139c 100644[m
+Binary files a/DVLD/Resources/Applications.png and b/DVLD/Resources/Applications.png differ
+[1mdiff --git a/DVLD/Users/frmListUsers.cs b/DVLD/Users/frmListUsers.cs[m
+[1mindex ee7f4b5..a0c55fb 100644[m
+[1m--- a/DVLD/Users/frmListUsers.cs[m
+[1m+++ b/DVLD/Users/frmListUsers.cs[m
+[36m@@ -163,6 +163,7 @@[m [mnamespace DVLD.Users[m
+         {[m
+             frmAddUpdateUser frm = new frmAddUpdateUser();[m
+             frm.DataBack += Frm_DataBack;[m
+[32m+[m[32m            frm.ShowDialog();[m
+         }[m
+ [m
+         private void _AddNewUserToGrid(int UserId)[m
+[1mdiff --git a/DVLD_Business/Users/clsUser.cs b/DVLD_Business/Users/clsUser.cs[m
+[1mindex aabc136..1347abb 100644[m
+[1m--- a/DVLD_Business/Users/clsUser.cs[m
+[1m+++ b/DVLD_Business/Users/clsUser.cs[m
+[36m@@ -93,6 +93,37 @@[m [mnamespace DVLD_Business.Users[m
+ [m
+         }[m
+ [m
+[32m+[m[32m        public static clsUser Find(string UserName, string Password)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            bool IsFound = false;[m
+[32m+[m[32m            int UserId = -1;[m
+[32m+[m[32m            int PersonId = -1;[m
+[32m+[m[32m            bool IsActive = false;[m
+[32m+[m[32m            IsFound = clsUserDataAccess.GetUserByUserNameAndPassword(UserName, Password, ref UserId, ref PersonId, ref IsActive);[m
+[32m+[m[32m            if (IsFound)[m
+[32m+[m[32m            {[m
+[32m+[m[32m                clsUser UserInfo = new clsUser();[m
+[32m+[m[32m                UserInfo.UserDTO.Mode = clsUserDTO.enMode.Update;[m
+[32m+[m[32m                UserInfo.UserDTO.UserID = UserId;[m
+[32m+[m[32m                UserInfo.UserDTO.PersonID = PersonId;[m
+[32m+[m[32m                UserInfo.UserDTO.UserName = UserName;[m
+[32m+[m[32m                UserInfo.UserDTO.Password = Password;[m
+[32m+[m[32m                UserInfo.UserDTO.IsActive = IsActive;[m
+[32m+[m[32m                clsPerson PersonInfo = clsPerson.Find(PersonId);[m
+[32m+[m[32m                if (PersonInfo != null)[m
+[32m+[m[32m                {[m
+[32m+[m[32m                    return new clsUser(UserInfo.UserDTO, PersonInfo);[m
+[32m+[m[32m                }[m
+[32m+[m[32m                else[m
+[32m+[m[32m                {[m
+[32m+[m[32m                    return new clsUser(UserInfo.UserDTO, null);[m
+[32m+[m[32m                }[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m            {[m
+[32m+[m[32m                return null;[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+         private bool _AddNewUser()[m
+         {[m
+ [m
+[1mdiff --git a/DataAccessLayer/Class1.cs b/DataAccessLayer/Class1.cs[m
+[1mdeleted file mode 100644[m
+[1mindex f764b53..0000000[m
+[1m--- a/DataAccessLayer/Class1.cs[m
+[1m+++ /dev/null[m
+[36m@@ -1,7 +0,0 @@[m
+[31m-﻿namespace DataAccessLayer[m
+[31m-{[m
+[31m-    public class Class1[m
+[31m-    {[m
+[31m-[m
+[31m-    }[m
+[31m-}[m
+[1mdiff --git a/DataAccessLayer/DataAccessLayer.csproj b/DataAccessLayer/DataAccessLayer.csproj[m
+[1mdeleted file mode 100644[m
+[1mindex fa71b7a..0000000[m
+[1m--- a/DataAccessLayer/DataAccessLayer.csproj[m
+[1m+++ /dev/null[m
+[36m@@ -1,9 +0,0 @@[m
+[31m-﻿<Project Sdk="Microsoft.NET.Sdk">[m
+[31m-[m
+[31m-  <PropertyGroup>[m
+[31m-    <TargetFramework>net8.0</TargetFramework>[m
+[31m-    <ImplicitUsings>enable</ImplicitUsings>[m
+[31m-    <Nullable>enable</Nullable>[m
+[31m-  </PropertyGroup>[m
+[31m-[m
+[31m-</Project>[m

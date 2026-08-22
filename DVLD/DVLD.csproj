@@ -33,8 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Guna.UI2, Version=2.0.4.8, Culture=neutral, PublicKeyToken=8b9d14aa5142e261, processorArchitecture=MSIL">
+      <HintPath>packages\Guna.UI2.WinForms.2.0.4.8\lib\net48\Guna.UI2.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,11 +52,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Applications\frmListApplicationTypes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\frmListApplicationTypes.Designer.cs">
+      <DependentUpon>frmListApplicationTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\frmUpdateApplicationType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\frmUpdateApplicationType.Designer.cs">
+      <DependentUpon>frmUpdateApplicationType.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormTests\User control tests\frmTestUserControlCardcs.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormTests\User control tests\frmTestUserControlCardcs.Designer.cs">
       <DependentUpon>frmTestUserControlCardcs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GlobalClasses\clsGlobal.cs" />
+    <Compile Include="LogIn\frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogIn\frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tests\frmEditTestType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tests\frmEditTestType.Designer.cs">
+      <DependentUpon>frmEditTestType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tests\frmListTestTypes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tests\frmListTestTypes.Designer.cs">
+      <DependentUpon>frmListTestTypes.cs</DependentUpon>
     </Compile>
     <Compile Include="Users\frmAddUpdateUser.cs">
       <SubType>Form</SubType>
@@ -88,11 +125,11 @@
     <Compile Include="People\PeopleControls\ctrPersonCardWithFiltercs.Designer.cs">
       <DependentUpon>ctrPersonCardWithFiltercs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Main\Form1.cs">
+    <Compile Include="Main\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Main\frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="FormTests\User control tests\frmTestPersonControlCard.cs">
       <SubType>Form</SubType>
@@ -143,8 +180,26 @@
     <Compile Include="Users\UserControls\ctrUserCard.Designer.cs">
       <DependentUpon>ctrUserCard.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Applications\frmListApplicationTypes.resx">
+      <DependentUpon>frmListApplicationTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\frmUpdateApplicationType.resx">
+      <DependentUpon>frmUpdateApplicationType.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormTests\User control tests\frmTestUserControlCardcs.resx">
       <DependentUpon>frmTestUserControlCardcs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogIn\frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tests\frmEditTestType.resx">
+      <DependentUpon>frmEditTestType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tests\frmListTestTypes.resx">
+      <DependentUpon>frmListTestTypes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Users\frmAddUpdateUser.resx">
       <DependentUpon>frmAddUpdateUser.cs</DependentUpon>
@@ -199,6 +254,8 @@
     <EmbeddedResource Include="Users\UserControls\ctrUserCard.resx">
       <DependentUpon>ctrUserCard.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -574,6 +631,63 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FormTests\peopleFromTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Login.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\closedeye.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\opendeye.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Applications1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Car.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Users.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MainPhoto.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\People.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Applications2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Keys.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SignOut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DrivingLicenseType.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DrivingLicenseType1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-driving-license-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\driver-license.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\resume.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-locked-user-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TestTypes.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
