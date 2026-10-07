@@ -66,10 +66,18 @@ namespace DVLD_DataAccess.Licenses
         {
             int NewInternationalLicenseID = -1;
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"INSERT INTO {clsInternationalLicensesAttributes.TableName} " +
-                           $"({clsInternationalLicensesAttributes.colApplicationId}, {clsInternationalLicensesAttributes.colDriverId}, {clsInternationalLicensesAttributes.colIssuedUsingLocalLicenseId}, {clsInternationalLicensesAttributes.colIssueDate}, {clsInternationalLicensesAttributes.colExpirationDate}, {clsInternationalLicensesAttributes.colIsActive}, {clsInternationalLicensesAttributes.colCreatedBy}) " +
-                           $"VALUES (@ApplicationID, @DriverID, @IssuedUsingLocalLicenseID, @IssueDate, @ExpirationDate, @IsActive, @CreatedByUserID); " +
-                           $"SELECT SCOPE_IDENTITY();";
+            string query = $"UPDATE {clsInternationalLicensesAttributes.TableName} SET {clsInternationalLicensesAttributes.colIsActive} = 0 " +
+                $"WHERE {clsInternationalLicensesAttributes.colDriverId} = @DriverID; " +
+                $"INSERT INTO {clsInternationalLicensesAttributes.TableName} " +
+                $"({clsInternationalLicensesAttributes.colApplicationId}, " +
+                $"{clsInternationalLicensesAttributes.colDriverId}, " +
+                $"{clsInternationalLicensesAttributes.colIssuedUsingLocalLicenseId}, " +
+                $"{clsInternationalLicensesAttributes.colIssueDate}, " +
+                $"{clsInternationalLicensesAttributes.colExpirationDate}, " +
+                $"{clsInternationalLicensesAttributes.colIsActive}, " +
+                $"{clsInternationalLicensesAttributes.colCreatedBy}) " +
+                $"VALUES (@ApplicationID, @DriverID, @IssuedUsingLocalLicenseID, @IssueDate, @ExpirationDate, @IsActive, @CreatedByUserID); " +
+                $"SELECT SCOPE_IDENTITY();";
             SqlCommand command = new SqlCommand(query, connection);
 
             using (connection)
@@ -201,7 +209,7 @@ namespace DVLD_DataAccess.Licenses
         {
             DataTable dt = new DataTable();
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"SELECT * FROM {clsInternationalLicensesAttributes.TableName} ORDER BY {clsInternationalLicensesAttributes.colInternationalLicenseId} DESC";
+            string query = $"SELECT * FROM {clsInternationalLicensesAttributes.TableName} ORDER BY {clsInternationalLicensesAttributes.colIsActive},{clsInternationalLicensesAttributes.colExpirationDate} DESC";
             SqlCommand command = new SqlCommand(query, connection);
             SqlDataAdapter adapter = new SqlDataAdapter(command);
 

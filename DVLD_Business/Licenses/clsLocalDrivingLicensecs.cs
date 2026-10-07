@@ -1,234 +1,334 @@
-﻿using System;
-using System.Data;
-using System.Runtime.CompilerServices;
-using DVLD_Business.Applications; // For composition with base application
-using DVLD_Business.Licenses;     // For composition with license classes
+﻿using DVLD_Business.Applications;
+using DVLD_Business.Drivers;
+using DVLD_Business.Tests;
 using DVLD_DataAccess.Applications;
+using System;
+using System.Data;
 
 namespace DVLD_Business.Licenses
 {
     public class clsLocalDrivingLicensecsDTO
     {
+        public enum enMode
+        {
+            Update = 0,
+            AddNew = 1
+        }
+
         public int LocalDrivingLicenseApplicationID { get; set; } = -1;
-        public int ApplicationID { get; set; } = -1;
         public int LicenseClassId { get; set; } = -1;
-
-        public enum enMode { AddNew = 1, Update = 0 };
         public enMode Mode { get; set; } = enMode.AddNew;
-
         public string LastValidationError { get; set; } = string.Empty;
     }
 
-    public class clsLocalDrivingLicensecs
+    public class clsLocalDrivingLicensecs : clsApplication
     {
-        public clsLocalDrivingLicensecsDTO LocalDrivingLicensecsDTO { get; set; }
+        public clsLocalDrivingLicensecsDTO LocalDrivingLicenseDTO { get; set; }
 
-        // COMPOSITION HOOKS: Gives your UI direct access to base application records and metadata
-        public clsApplication ApplicationInfo { get; set; }
         public clsLicenseClass LicenseClassInfo { get; set; }
 
-        public clsLocalDrivingLicensecs()
+        public clsLocalDrivingLicensecs() : base()
         {
-            this.LocalDrivingLicensecsDTO = new clsLocalDrivingLicensecsDTO();
-            this.LocalDrivingLicensecsDTO.Mode = clsLocalDrivingLicensecsDTO.enMode.AddNew;
+            LocalDrivingLicenseDTO = new clsLocalDrivingLicensecsDTO();
+            LicenseClassInfo = null;
 
-            this.ApplicationInfo = null;
-            this.LicenseClassInfo = null;
         }
 
-        private clsLocalDrivingLicensecs(clsLocalDrivingLicensecsDTO FilledDTO)
+        private clsLocalDrivingLicensecs(clsLocalDrivingLicensecsDTO FilledDTO) : base()
         {
-            this.LocalDrivingLicensecsDTO = FilledDTO;
-            this.LocalDrivingLicensecsDTO.Mode = clsLocalDrivingLicensecsDTO.enMode.Update;
-
-            // Hydrate complex compositions seamlessly upon retrieval
-            this.ApplicationInfo = clsApplication.Find(FilledDTO.ApplicationID);
-            this.LicenseClassInfo = clsLicenseClass.Find(FilledDTO.LicenseClassId);
+            LocalDrivingLicenseDTO = FilledDTO;
+            ApplicationDTO.Mode = clsApplicationDTO.enMode.Update;
+            LicenseClassInfo = clsLicenseClass.Find(FilledDTO.LicenseClassId);
         }
 
-        private bool CheckIfBaseApplicationAlreadyLinked()
+        public static new clsLocalDrivingLicensecs Find(int localApplicationId)
         {
-           
-            return clsLocalDrivingLicenseApplicationDataAccess.DoesLocalDrivingLicenseApplicationExist(this.LocalDrivingLicensecsDTO.ApplicationID);
-        }
+            int applicationId = -1;
+            int licenseClassId = -1;
 
-        public static clsLocalDrivingLicensecs Find(int LocalApplicationId)
-        {
-            int ApplicationId = -1;
-            int LicenseClassId = -1;
+            bool isFound =
+                clsLocalDrivingLicenseApplicationDataAccess
+                .GetLocalDrivingLicenseApplicationInfoByID(
+                    localApplicationId,
+                    ref applicationId,
+                    ref licenseClassId);
 
-            bool isFound = clsLocalDrivingLicenseApplicationDataAccess.GetLocalDrivingLicenseApplicationInfoByID(
-                LocalApplicationId, ref ApplicationId, ref LicenseClassId
-            );
+            if (!isFound)
+                return null;
 
-            if (isFound)
-            {
-             
-                clsLocalDrivingLicensecsDTO FilledDto = new clsLocalDrivingLicensecsDTO
+            clsApplication application = clsApplication.Find(applicationId);// Fetch the base application details
+
+            if (application == null)
+                return null;
+
+            clsLocalDrivingLicensecsDTO FilledDTO =
+                new clsLocalDrivingLicensecsDTO
                 {
-                    LocalDrivingLicenseApplicationID = LocalApplicationId,
-                    ApplicationID = ApplicationId, 
-                    LicenseClassId = LicenseClassId
+                    LocalDrivingLicenseApplicationID = localApplicationId,
+                    LicenseClassId = licenseClassId,
+                    Mode = clsLocalDrivingLicensecsDTO.enMode.Update
                 };
 
-                return new clsLocalDrivingLicensecs(FilledDto);
-            }
 
-            return null;
+
+            clsLocalDrivingLicensecs localApplication = new clsLocalDrivingLicensecs(FilledDTO);
+            //rhis is the whole class instance with the filled DTO
+
+
+            // fill the base class properties from the found application
+            localApplication.ApplicationDTO.ApplicationID =
+                application.ApplicationDTO.ApplicationID;
+
+            localApplication.ApplicationDTO.ApplicantPersonID =
+                application.ApplicationDTO.ApplicantPersonID;
+
+            localApplication.ApplicationDTO.ApplicationTypeID =
+                application.ApplicationDTO.ApplicationTypeID;
+
+            localApplication.ApplicationDTO.ApplicationDate =
+                application.ApplicationDTO.ApplicationDate;
+
+            localApplication.ApplicationDTO.ApplicationStatus =
+                application.ApplicationDTO.ApplicationStatus;
+
+            localApplication.ApplicationDTO.LastStatusDate =
+                application.ApplicationDTO.LastStatusDate;
+
+            localApplication.ApplicationDTO.PaidFees =
+                application.ApplicationDTO.PaidFees;
+
+            localApplication.ApplicationDTO.CreatedByUserID =
+                application.ApplicationDTO.CreatedByUserID;
+
+            // Fill the composition properties from the found application
+            localApplication.PersonInfo = application.PersonInfo;
+            localApplication.CreatedByUserInfo = application.CreatedByUserInfo;
+            localApplication.ApplicationTypeInfo = application.ApplicationTypeInfo;
+
+            return localApplication;
         }
 
         private bool _AddNewLocalDrivingLicenseApplication()
         {
-            int NewId = -1;
-            bool success = clsLocalDrivingLicenseApplicationDataAccess.AddNewLocalDrivingLicenseApplication(
-                ref NewId,
-                this.LocalDrivingLicensecsDTO.ApplicationID,
-                this.LocalDrivingLicensecsDTO.LicenseClassId
-            );
+            int newId = -1;
 
-            if (success)
+            bool success =
+                clsLocalDrivingLicenseApplicationDataAccess
+                .AddNewLocalDrivingLicenseApplication(
+                    ref newId,
+                    ApplicationDTO.ApplicationID,// Original Application ID from the base class
+                    LocalDrivingLicenseDTO.LicenseClassId);
+
+            if (!success)
             {
-                this.LocalDrivingLicensecsDTO.LocalDrivingLicenseApplicationID = NewId;
-                this.LocalDrivingLicensecsDTO.Mode = clsLocalDrivingLicensecsDTO.enMode.Update;
-                return true;
+                LocalDrivingLicenseDTO.LastValidationError =
+                    "Database Error: Failed to insert new local driving license application.";
+
+                return false;
             }
 
-            this.LocalDrivingLicensecsDTO.LastValidationError = "Database Error: Failed to insert new local application record.";
-            return false;
+            LocalDrivingLicenseDTO.LocalDrivingLicenseApplicationID = newId;
+            LocalDrivingLicenseDTO.Mode =
+                clsLocalDrivingLicensecsDTO.enMode.Update;
+
+            return true;
         }
 
-        private bool _UpdateLocalDrivingLicenseApplication()
+        public new bool Save()
         {
-          
-            clsLicenseClass licenseClass = clsLicenseClass.Find(this.LocalDrivingLicensecsDTO.LicenseClassId);
-            if (licenseClass == null)
+            if (LocalDrivingLicenseDTO.Mode == clsLocalDrivingLicensecsDTO.enMode.Update ||
+                ApplicationDTO.Mode == clsApplicationDTO.enMode.Update)
             {
-                this.LocalDrivingLicensecsDTO.LastValidationError = "Error: Target license class was not found.";
+                LocalDrivingLicenseDTO.LastValidationError =
+                    "System Restriction: Applications are immutable once created. Use the appropriate operation to change application state.";
+
                 return false;
             }
 
-         
-            clsApplication baseApp = clsApplication.Find(this.LocalDrivingLicensecsDTO.ApplicationID);
-            if (baseApp == null)
+            // Add new application logic
+
+            if (LocalDrivingLicenseDTO.LicenseClassId <= 0)
             {
-                this.LocalDrivingLicensecsDTO.LastValidationError = "Error: Linked base application record was not found.";
+                LocalDrivingLicenseDTO.LastValidationError =
+                    "Validation Fail: A valid license class is required.";
+
+                return false;
+            }
+
+            LicenseClassInfo = clsLicenseClass.Find(LocalDrivingLicenseDTO.LicenseClassId);
+
+            if (LicenseClassInfo == null)
+            {
+                LocalDrivingLicenseDTO.LastValidationError =
+                    "Validation Fail: The selected license class does not exist.";
+
+                return false;
+            }
+
+            if (ApplicationTypeInfo == null) // 
+            {
+                ApplicationTypeInfo = clsApplicationTypes.Find(ApplicationDTO.ApplicationTypeID);
+            }
+
+            if (ApplicationTypeInfo == null)
+            {
+                LocalDrivingLicenseDTO.LastValidationError =
+                    "Validation Fail: The application type was not found.";
+
                 return false;
             }
 
 
-            clsApplicationTypes appType = clsApplicationTypes.Find(baseApp.ApplicationDTO.ApplicationTypeID);
-            if (appType == null)
+
+
+
+            if (!base.Save())
             {
-                this.LocalDrivingLicensecsDTO.LastValidationError = "Error: Linked application type was not found.";
+                LocalDrivingLicenseDTO.LastValidationError = ApplicationDTO.LastValidationError;
+
                 return false;
             }
 
-           
-            decimal applicationTypeFee = appType.DTO.ApplicationFees;
-            decimal newClassFee = licenseClass.clsLicenseClassDTO.ClassFees;
-
-            baseApp.ApplicationDTO.PaidFees = applicationTypeFee + newClassFee;
-
-          
-            if (!baseApp.Save())
-            {
-                this.LocalDrivingLicensecsDTO.LastValidationError = "Error: Failed to update base application fees for the new license class.";
-                return false;
-            }
-
-
-            return clsLocalDrivingLicenseApplicationDataAccess.UpdateLocalDrivingLicenseApplication(
-                this.LocalDrivingLicensecsDTO.LocalDrivingLicenseApplicationID,
-                this.LocalDrivingLicensecsDTO.LicenseClassId
-            );
+            return _AddNewLocalDrivingLicenseApplication();
         }
 
-        public static bool Delete(int LocalDrivingLicenseApplicationID)
+        public static bool Delete(int localApplicationId)
         {
-            return clsLocalDrivingLicenseApplicationDataAccess.DeleteLocalDrivingLicenseApplication(LocalDrivingLicenseApplicationID);
+            return clsLocalDrivingLicenseApplicationDataAccess
+                .DeleteLocalDrivingLicenseApplication(localApplicationId);
         }
 
         public static DataTable GetAllLocalDrivingLicenseApplications()
         {
-            return clsLocalDrivingLicenseApplicationDataAccess.GetAllLocalDrivingLicenseApplications();
+            return clsLocalDrivingLicenseApplicationDataAccess
+                .GetAllLocalDrivingLicenseApplications();
+        }
+        public static byte GetPassedTestCount(int localDrivingLicenseApplicationId)
+        {
+            return clsLocalDrivingLicenseApplicationDataAccess.GetPassedTestCount(localDrivingLicenseApplicationId);
         }
 
-        public bool Save()
+        public byte GetPassedTestCount()
         {
-          // Sync Lazy-Loaded Composition Objects (Pointers)
-            if (this.LocalDrivingLicensecsDTO.ApplicationID > 0)
+            return clsLocalDrivingLicensecs.GetPassedTestCount(this.LocalDrivingLicenseDTO.LocalDrivingLicenseApplicationID);
+        }
+        public bool DoesPassTestType(clsTestTypesDTO.enTestType TestTypeID)
+        {
+            return clsLocalDrivingLicenseApplicationDataAccess.DoesPassTestType(this.LocalDrivingLicenseDTO.LocalDrivingLicenseApplicationID, (short)TestTypeID);
+        }
+
+        public bool DoesPassTestType(int localDrivingLicenseApplicationId, clsTestTypesDTO.enTestType TestTypeID)
+        {
+            return clsLocalDrivingLicenseApplicationDataAccess.DoesPassTestType(localDrivingLicenseApplicationId, (short)TestTypeID);
+        }
+
+        public bool DoesAttendTestType(clsTestTypesDTO.enTestType TestTypeID)
+        {
+            return clsLocalDrivingLicenseApplicationDataAccess.DoesAttendTestType(this.LocalDrivingLicenseDTO.LocalDrivingLicenseApplicationID, (short)TestTypeID);
+        }
+
+        public byte TotalTrialsPerTest(clsTestTypesDTO.enTestType TestTypeID)
+        {
+            return clsLocalDrivingLicenseApplicationDataAccess.TotalTrialsPerTest(this.LocalDrivingLicenseDTO.LocalDrivingLicenseApplicationID, (short)TestTypeID);
+        }
+
+
+        public static byte TotalTrialsPerTest(int localDrivingLicenseApplicationId, clsTestTypesDTO.enTestType TestTypeID)
+        {
+            return clsLocalDrivingLicenseApplicationDataAccess.TotalTrialsPerTest(localDrivingLicenseApplicationId, (short)TestTypeID);
+        }
+
+
+        /////////////////////
+        public bool IsThereAnActiveScheduledTest(clsTestTypesDTO.enTestType TestTypeID)
+        {
+            return clsLocalDrivingLicensecs.IsThereAnActiveScheduledTest(
+                this.LocalDrivingLicenseDTO.LocalDrivingLicenseApplicationID, TestTypeID
+
+            );
+        }
+
+
+        public static bool IsThereAnActiveScheduledTest(int localDrivingLicenseApplicationId, clsTestTypesDTO.enTestType TestTypeId)
+        {
+            return clsLocalDrivingLicenseApplicationDataAccess.IsThereAnActiveScheduledTest(localDrivingLicenseApplicationId, (short)TestTypeId);
+        }
+    
+
+
+        public bool SetCompleted()
+        {
+            bool isUpdated = clsApplicationsDataAccess.UpdateApplicationStatus(
+        this.ApplicationDTO.ApplicationID,
+        (byte)clsApplicationDTO.enApplicationStatus.Completed
+    );
+
+            if (isUpdated)
             {
-                if (this.ApplicationInfo == null || this.ApplicationInfo.ApplicationDTO.ApplicationID != this.LocalDrivingLicensecsDTO.ApplicationID)
-                {
-                    this.ApplicationInfo = clsApplication.Find(this.LocalDrivingLicensecsDTO.ApplicationID);
-                }
+                this.ApplicationDTO.ApplicationStatus = (byte)clsApplicationDTO.enApplicationStatus.Completed;
+                this.ApplicationDTO.LastStatusDate = DateTime.Now;
             }
 
-            if (this.LocalDrivingLicensecsDTO.LicenseClassId > 0)
+            return isUpdated;
+        }
+        public int IssueLicenseForFirstTime(string notes, int createdByUserId)
+        {
+           
+            if (this.LicenseClassInfo == null)
             {
-                if (this.LicenseClassInfo == null || this.LicenseClassInfo.clsLicenseClassDTO.LicenseClassID != this.LocalDrivingLicensecsDTO.LicenseClassId)
-                {
-                    this.LicenseClassInfo = clsLicenseClass.Find(this.LocalDrivingLicensecsDTO.LicenseClassId);
-                }
-            }
-
-        
-            if (this.LocalDrivingLicensecsDTO.ApplicationID <= 0)
-            {
-                this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Linked Base Application ID is missing or invalid.";
-                return false;
-            }
-
-            if (this.LocalDrivingLicensecsDTO.LicenseClassId <= 0 || this.LicenseClassInfo == null)
-            {
-                this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Target License Class is invalid or does not exist.";
-                return false;
-            }
-
-            if (this.ApplicationInfo == null)
-            {
-                this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Linked Base Application record was not found.";
-                return false;
+                this.LicenseClassInfo = clsLicenseClass.Find(this.LocalDrivingLicenseDTO.LicenseClassId);
+                if (this.LicenseClassInfo == null)
+                    return -1;
             }
 
            
-            switch (this.LocalDrivingLicensecsDTO.Mode)
+            int driverId = -1;
+            clsDriver driver = clsDriver.FindByPersonID(this.ApplicationDTO.ApplicantPersonID);
+
+            if (driver == null)
             {
-                case clsLocalDrivingLicensecsDTO.enMode.AddNew:
+                driver = new clsDriver();
+                driver.DriverDTO.PersonID = this.ApplicationDTO.ApplicantPersonID;
+                driver.DriverDTO.CreatedByUserID = createdByUserId;
+                driver.DriverDTO.CreatedDate = DateTime.Now;
 
-
-                    if (CheckIfBaseApplicationAlreadyLinked())
-                    {
-                        this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: This base application is already linked to another local application.";
-                        return false;
-                    }
-
-                    return _AddNewLocalDrivingLicenseApplication();
-
-                case clsLocalDrivingLicensecsDTO.enMode.Update:
-
-                    // Fetch original state to protect immutable relations
-                    clsLocalDrivingLicensecs originalRecord = clsLocalDrivingLicensecs.Find(this.LocalDrivingLicensecsDTO.LocalDrivingLicenseApplicationID);
-
-                    if (originalRecord == null)
-                    {
-                        this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: The local driving license application record being updated no longer exists.";
-                        return false;
-                    }
-
-                    // Guard Rail: Prohibit re-linking to a different base ApplicationID
-                    if (originalRecord.LocalDrivingLicensecsDTO.ApplicationID != this.LocalDrivingLicensecsDTO.ApplicationID)
-                    {
-                        this.LocalDrivingLicensecsDTO.LastValidationError = "Validation Fail: Modifying the base ApplicationID link on an existing record is strictly prohibited.";
-                        return false;
-                    }
-
-                    return _UpdateLocalDrivingLicenseApplication();
-
-                default:
-                    return false;
+                if (driver.Save())
+                {
+                    driverId = driver.DriverDTO.DriverID;
+                }
+                else
+                {
+                    return -1;
+                }
             }
+            else
+            {
+                driverId = driver.DriverDTO.DriverID;
+            }
+
+           
+            clsLicense newLicense = new clsLicense();
+            newLicense.LicenseDTO.ApplicationID = this.ApplicationDTO.ApplicationID;
+            newLicense.LicenseDTO.DriverID = driverId;
+            newLicense.LicenseDTO.LicenseClassID = this.LocalDrivingLicenseDTO.LicenseClassId;
+            newLicense.LicenseDTO.IssueDate = DateTime.Now;
+            newLicense.LicenseDTO.ExpirationDate = DateTime.Now.AddYears(this.LicenseClassInfo.clsLicenseClassDTO.DefaultValidityLength);
+            newLicense.LicenseDTO.Notes = string.IsNullOrWhiteSpace(notes) ? "No Notes" : notes.Trim();
+            newLicense.LicenseDTO.PaidFees = this.LicenseClassInfo.clsLicenseClassDTO.ClassFees;
+            newLicense.LicenseDTO.IsActive = true;
+            newLicense.LicenseDTO.IssueReason = clsLicenseDTO.enIssueReason.FirstTime;
+            newLicense.LicenseDTO.CreatedByUserID = createdByUserId;
+
+            if (newLicense.Save())
+            {
+               
+                this.SetCompleted();
+
+               
+                return newLicense.LicenseDTO.LicenseID;
+            }
+
+            return -1;
         }
     }
-
-    }
+}

@@ -61,7 +61,7 @@ namespace DVLD_DataAccess.Applications
             bool isFound = false;
             SqlConnection connection = new SqlConnection(connectionstring);
 
-          
+
             string query = $"SELECT 1 FROM {clsLocalAppAttributes.TableName} " +
                            $"WHERE {clsLocalAppAttributes.colLocalDrivingLicenseApplicationId} = @LocalDrivingLicenseApplicationID";
 
@@ -78,7 +78,7 @@ namespace DVLD_DataAccess.Applications
                         connection.Open();
                         object result = command.ExecuteScalar();
 
-                     
+
                         if (result != null)
                         {
                             isFound = true;
@@ -148,7 +148,7 @@ namespace DVLD_DataAccess.Applications
                 using (command)
                 {
                     command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", LocalDrivingLicenseApplicationID);
-               
+
                     command.Parameters.AddWithValue("@LicenseClassID", LicenseClassID);
 
                     try
@@ -204,8 +204,10 @@ namespace DVLD_DataAccess.Applications
 
             // Note: In the view layer later, you'll probably want a complex JOIN view, 
             // but the base DAL table pull remains direct and clean.
-            string query = $"SELECT * FROM {clsLocalAppAttributes.TableName} " +
-                           $"ORDER BY {clsLocalAppAttributes.colLocalDrivingLicenseApplicationId} DESC";
+
+
+            string query = $"SELECT * FROM LocalDrivingLicenseApplications_View " +
+                           $" ORDER BY ApplicationDate DESC";
 
             SqlCommand command = new SqlCommand(query, connection);
 
@@ -225,6 +227,207 @@ namespace DVLD_DataAccess.Applications
                 }
             }
             return dt;
+        }
+
+
+
+        public static bool DoesPassTestType(int localDrivingLicenseApplicationId, short testTypeId)
+        {
+            bool isFound = false;
+
+            string query = $@"SELECT TOP 1 Found = 1
+                      FROM {clsLocalAppAttributes.TableName} L
+                      INNER JOIN TestAppointments A 
+                          ON L.LocalDrivingLicenseApplicationID = A.LocalDrivingLicenseApplicationID
+                      INNER JOIN Tests T 
+                          ON A.TestAppointmentID = T.TestAppointmentID
+                      WHERE L.LocalDrivingLicenseApplicationID = @LocalDrivingLicenseApplicationID
+                        AND A.TestTypeID = @TestTypeID
+                        AND T.TestResult = 1";
+
+            using (SqlConnection connection = new SqlConnection(connectionstring))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", localDrivingLicenseApplicationId);
+                    command.Parameters.AddWithValue("@TestTypeID", testTypeId);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+
+                        if (result != null)
+                        {
+                            isFound = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        isFound = false;
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+
+            return isFound;
+        }
+        public static byte TotalTrialsPerTest(int localDrivingLicenseApplicationId, short testTypeId)
+        {
+            byte totalTrials = 0;
+
+            string query = $@"SELECT COUNT(T.TestID)
+                      FROM {clsLocalAppAttributes.TableName} L
+                      INNER JOIN TestAppointments A 
+                          ON L.LocalDrivingLicenseApplicationID = A.LocalDrivingLicenseApplicationID
+                      INNER JOIN Tests T 
+                          ON A.TestAppointmentID = T.TestAppointmentID
+                      WHERE L.LocalDrivingLicenseApplicationID = @LocalDrivingLicenseApplicationID
+                        AND A.TestTypeID = @TestTypeID";
+
+            using (SqlConnection connection = new SqlConnection(connectionstring))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", localDrivingLicenseApplicationId);
+                    command.Parameters.AddWithValue("@TestTypeID", testTypeId);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+
+                        if (result != null && byte.TryParse(result.ToString(), out byte trialsCount))
+                        {
+                            totalTrials = trialsCount;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                     
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+
+            return totalTrials;
+        }
+
+        // this query is called on testappointment tables
+        public static bool IsThereAnActiveScheduledTest(int localDrivingLicenseApplicationId, short testTypeId)
+        {
+            bool isFound = false;
+
+           
+            string query = $@"SELECT TOP 1 Found = 1
+                      FROM TestAppointments
+                      WHERE LocalDrivingLicenseApplicationID = @LocalDrivingLicenseApplicationID
+                        AND TestTypeID = @TestTypeID
+                        AND IsLocked = 0";
+
+            using (SqlConnection connection = new SqlConnection(connectionstring))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", localDrivingLicenseApplicationId);
+                    command.Parameters.AddWithValue("@TestTypeID", testTypeId);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+
+                        if (result != null)
+                        {
+                            isFound = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        isFound = false;
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+
+            return isFound;
+        }
+        public static bool DoesAttendTestType(int localDrivingLicenseApplicationId, short testTypeId)
+        {
+            bool isFound = false;
+
+            string query = $@"SELECT TOP 1 Found = 1
+                      FROM {clsLocalAppAttributes.TableName} L
+                      INNER JOIN TestAppointments A 
+                          ON L.LocalDrivingLicenseApplicationID = A.LocalDrivingLicenseApplicationID
+                      INNER JOIN Tests T 
+                          ON A.TestAppointmentID = T.TestAppointmentID
+                      WHERE L.LocalDrivingLicenseApplicationID = @LocalDrivingLicenseApplicationID
+                        AND A.TestTypeID = @TestTypeID";
+
+            using (SqlConnection connection = new SqlConnection(connectionstring))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", localDrivingLicenseApplicationId);
+                    command.Parameters.AddWithValue("@TestTypeID", testTypeId);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+
+                        if (result != null)
+                        {
+                            isFound = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        isFound = false;
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+
+            return isFound;
+        }
+
+        public static byte GetPassedTestCount(int localDrivingLicenseApplicationId)
+        {
+            byte passedTestCount = 0;
+
+            
+            string query = @"SELECT COUNT(Tests.TestID)
+                     FROM Tests 
+                     INNER JOIN TestAppointments 
+                         ON Tests.TestAppointmentID = TestAppointments.TestAppointmentID
+                     WHERE TestAppointments.LocalDrivingLicenseApplicationID = @LocalDrivingLicenseApplicationID
+                       AND Tests.TestResult = 1";
+
+            using (SqlConnection connection = new SqlConnection(connectionstring))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", localDrivingLicenseApplicationId);
+
+                try
+                {
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+
+                    if (result != null && byte.TryParse(result.ToString(), out byte count))
+                    {
+                        passedTestCount = count;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    passedTestCount = 0;
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+            }
+
+            return passedTestCount;
         }
     }
 }

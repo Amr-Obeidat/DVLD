@@ -6,7 +6,16 @@ namespace DVLD_Business.Tests
 {
     public class clsTestTypesDTO
     {
-        public short TestTypeId { get; set; }
+       
+        public enum enTestType
+        {
+            VisionTest = 1,
+            WrittenTest = 2,
+            RoadTest = 3
+        }
+
+   
+        public enTestType TestTypeId { get; set; }
         public string TestTypeTitle { get; set; }
         public string TestTypeDescription { get; set; }
         public decimal TestTypeFees { get; set; }
@@ -26,21 +35,25 @@ namespace DVLD_Business.Tests
             this.clsTestTypesDTO = new clsTestTypesDTO();
         }
 
-        public static clsTestTypes Find(short TestTypeId)
+        public static clsTestTypes Find(clsTestTypesDTO.enTestType TestTypeID)
         {
             string Title = string.Empty;
             string Description = string.Empty;
             decimal Fees = 0;
 
-            bool IsFound = clsTestTypeDataAccess.GetTestTypeInfoById(TestTypeId, ref Title, ref Description, ref Fees);
+            bool IsFound = clsTestTypeDataAccess.GetTestTypeInfoById(
+                (short)TestTypeID,
+                ref Title,
+                ref Description,
+                ref Fees
+            );
 
             if (IsFound)
             {
-                // FIXED: Instantiate the actual DTO data carrier cleanly
                 clsTestTypesDTO FilledDto = new clsTestTypesDTO
                 {
-                    TestTypeId = TestTypeId,
-                    TestTypeTitle = Title, // FIXED: Added missing title mapping
+                    TestTypeId = TestTypeID,
+                    TestTypeTitle = Title,
                     TestTypeDescription = Description,
                     TestTypeFees = Fees
                 };
@@ -53,8 +66,10 @@ namespace DVLD_Business.Tests
 
         private bool _UpdateTestType()
         {
-
-            return clsTestTypeDataAccess.UpdateTestfees(this.clsTestTypesDTO.TestTypeId, this.clsTestTypesDTO.TestTypeFees);
+            return clsTestTypeDataAccess.UpdateTestfees(
+                (short)this.clsTestTypesDTO.TestTypeId,
+                this.clsTestTypesDTO.TestTypeFees
+            );
         }
 
         public static DataTable GetAllTestTypes()
@@ -64,7 +79,6 @@ namespace DVLD_Business.Tests
 
         public bool Save()
         {
-            // Since this is a system lookup table, we only allow updates to existing rows.
             return _UpdateTestType();
         }
     }

@@ -25,7 +25,7 @@ namespace DVLD.People
         private  static DataTable _dtAllPeople=clsPerson.GetAllPeople();   
 
 
-        private DataTable _dtPeople = _dtAllPeople.DefaultView.ToTable(true,
+        private DataTable _dtPeople = _dtAllPeople.DefaultView.ToTable(false,
                     PersonColumns.colPersonId,
                     PersonColumns.colNationalId,
                     PersonColumns.colFirstName,
@@ -354,7 +354,7 @@ namespace DVLD.People
             }
 
        
-            string selectedColumn = GetSelectedColumnName(filterColumn);
+            string selectedColumn = GetSelectedColumnName(filterColumn);// should be the same as the column in the database
 
 
             if (selectedColumn == PersonColumns.colPersonId)
@@ -450,6 +450,11 @@ namespace DVLD.People
         private void cmsPeople_Opening(object sender, CancelEventArgs e)
         {
 
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
     }

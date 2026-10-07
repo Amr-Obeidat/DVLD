@@ -149,30 +149,162 @@ namespace DVLD_DataAccess.Licenses
             }
             return isUpdated;
         }
-        public static DataTable GetDriverLicenses(int DriverID)
+
+
+        public static DataTable GetDriverLicensesByDriverId(int DriverId)
         {
             DataTable dt = new DataTable();
+
+            string query = @"SELECT 
+                        Licenses.LicenseID,
+                        ApplicationID,
+                        LicenseClasses.ClassName, 
+                        Licenses.IssueDate,
+                        Licenses.ExpirationDate, 
+                        Licenses.IsActive
+                     FROM Licenses 
+                     INNER JOIN LicenseClasses 
+                         ON Licenses.LicenseClass = LicenseClasses.LicenseClassID
+                     WHERE DriverID = @DriverID and IsActive=1
+                     ORDER BY IsActive DESC, ExpirationDate DESC";
+
+            using (SqlConnection connection = new SqlConnection(connectionstring))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@DriverID", DriverId);
+
+                try
+                {
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            dt.Load(reader);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+            }
+
+            return dt;
+        }
+
+
+        public static DataTable GetAllLicenses()
+        {
+            DataTable dt = new DataTable();
+
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"SELECT * FROM {clsLicensesAttributes.TableName} WHERE {clsLicensesAttributes.colDriverId} = @DriverID ORDER BY {clsLicensesAttributes.colLicenseId} DESC";
+            string query = $"select * from {clsLicensesAttributes.TableName} order by {clsLicensesAttributes.colDriverId}";
+
+
+            using (connection)
+            {
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+
+                    try
+                    {
+
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        adapter.Fill(dt);
+
+                    }
+
+                    catch (Exception ex)
+                    {
+
+                        Console.WriteLine("Error " + ex.Message);
+                    }
+                }
+
+
+
+
+            }
+            return dt;
+        }
+
+        public static int GetActiveLicenseIDByPersonID(int PersonID, int LicenseClassID)
+        {
+            int LicenseID = -1;
+
+            SqlConnection connection = new SqlConnection(connectionstring);
+            string query = @"SELECT Licenses.LicenseID 
+                     FROM Licenses 
+                     INNER JOIN Drivers ON Licenses.DriverID = Drivers.DriverID 
+                     WHERE Licenses.LicenseClass = @LicenseClass 
+                       AND Drivers.PersonID = @PersonID 
+                       AND IsActive = 1";
+
+            using (connection)
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@PersonID", PersonID);
+                    command.Parameters.AddWithValue("@LicenseClass", LicenseClassID);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+
+                        if (result != null && int.TryParse(result.ToString(), out int id))
+                        {
+                            LicenseID = id;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+
+            return LicenseID;
+        }
+
+        public static bool DeactivateLicense(int LicenseID)
+        {
+
+            bool IsDeleted = false;
+            SqlConnection connection = new SqlConnection(connectionstring);
+            string query = $"UPDATE {clsLicensesAttributes.TableName} SET " +
+                           $"{clsLicensesAttributes.colIsActive} = 0 " +
+                           $"WHERE {clsLicensesAttributes.colLicenseId} = @LicenseID";
+
             SqlCommand command = new SqlCommand(query, connection);
-            SqlDataAdapter adapter = new SqlDataAdapter(command);
 
             using (connection)
             {
                 using (command)
                 {
-                    command.Parameters.AddWithValue("@DriverID", DriverID);
+                    command.Parameters.AddWithValue("@LicenseID", LicenseID);
+
+                   
+
                     try
                     {
-                        adapter.Fill(dt);
+                        connection.Open();
+                        int rowsAffected = command.ExecuteNonQuery();
+                        IsDeleted = rowsAffected > 0;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Error retrieving driver licenses: " + ex.Message);
+                        IsDeleted = false;
+                        throw new Exception("Error updating license status: " + ex.Message);
                     }
                 }
             }
-            return dt;
+            return IsDeleted;
+
+
         }
+
     }
 }

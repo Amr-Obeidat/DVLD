@@ -87,6 +87,14 @@ namespace DVLD.Controls
             set => ctrlPersonCard1.EnableEditPersonLink = value;
         }
 
+        public bool  CreatePersonbtnenabled{
+
+
+            set=>btnAddNewPerson.Enabled = value;
+            
+
+
+            }
 
         public ctrPersonCardWithFiltercs()
         {
@@ -206,7 +214,10 @@ namespace DVLD.Controls
 
             }
         }
-
+        public void FilterFocues()
+        {
+            txtFilterValue.Focus();
+        }
         private void txtFilterValue_Validating(object sender, CancelEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtFilterValue.Text))

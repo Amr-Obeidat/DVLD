@@ -101,6 +101,14 @@ namespace DVLD_DataAccess.Applications
             }
             return ActiveApplicationID;
         }
+
+
+        public static bool DoesPersonHaveActiveApplication(int Personid,int ApplicationTypeID)
+        {
+
+            return (GetActiveApplicationID(Personid, ApplicationTypeID) != -1) ;
+        }
+       
         public static bool AddNewApplication(int ApplicantPersonID, int ApplicationTypeID,
             DateTime ApplicationDate, byte ApplicationStatus, DateTime LastStatusDate, decimal PaidFees, int CreatedByUserID, ref int NewApplicationID)
         {
@@ -141,7 +149,47 @@ namespace DVLD_DataAccess.Applications
             return IsAdded;
         }
 
-     
+     public static int GetActiveApplicationIDForLicenseClass(int ApplicantPersonID, int ApplicationTypeID, int LicenseClassID)
+        {
+            int ActiveApplicationID = -1;
+            SqlConnection connection = new SqlConnection(connectionstring);
+           
+            string query = $"SELECT a.{clsApplicationsAttributes.colApplicationId} " +
+                           $"FROM {clsApplicationsAttributes.TableName} a " +
+                           $"JOIN DVLD.dbo.LocalDrivingLicenseApplications l ON a.{clsApplicationsAttributes.colApplicationId} = l.ApplicationID " +
+                           $"WHERE a.{clsApplicationsAttributes.colPersonId} = @ApplicantPersonID " +
+                           $"AND a.{clsApplicationsAttributes.colApplicationType} = @ApplicationTypeID " +
+                           $"AND l.LicenseClassID = @LicenseClassID " +
+                           $"AND a.{clsApplicationsAttributes.colApplicationStatus} = 1";
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@ApplicantPersonID", ApplicantPersonID);
+            command.Parameters.AddWithValue("@ApplicationTypeID", ApplicationTypeID);
+            command.Parameters.AddWithValue("@LicenseClassID", LicenseClassID);
+            using (connection)
+            {
+                using (command)
+                {
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+                        if (result != null && int.TryParse(result.ToString(), out int id))
+                        {
+                            ActiveApplicationID = id;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error retrieving active application ID for license class: " + ex.Message);
+                    }
+                }
+            }
+            return ActiveApplicationID;
+        }
+        public static bool DoesPersonHaveActiveApplicationForLicenseClass(int Personid, int ApplicationTypeID, int LicenseClassID)
+        {
+            return (GetActiveApplicationIDForLicenseClass(Personid, ApplicationTypeID, LicenseClassID) != -1);
+        }
         public static bool UpdateApplicationStatus(int ApplicationId, byte NewStatues)
         {
 
@@ -185,7 +233,8 @@ namespace DVLD_DataAccess.Applications
         {
             DataTable dt = new DataTable();
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"SELECT * FROM {clsApplicationsAttributes.TableName} ORDER BY {clsApplicationsAttributes.colApplicationId} DESC";
+           
+            string query = "SELECT * FROM LocalDrivingLicenseApplications_View ORDER BY LocalDrivingLicenseApplicationID DESC"; ;
             SqlCommand command = new SqlCommand(query, connection);
             SqlDataAdapter adapter = new SqlDataAdapter(command);
 

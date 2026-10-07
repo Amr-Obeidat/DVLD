@@ -13,6 +13,8 @@ namespace DVLD_Business.Tests
         public int TestAppointmentID { get; set; } = -1;
         public bool TestResult { get; set; } = false;
         public string Notes { get; set; } = "";
+      
+        public bool TestResults { get; set; }   
         public int CreatedByUserID { get; set; } = -1;
         public string LastValidationError { get; set; } = "";
     }
@@ -21,18 +23,22 @@ namespace DVLD_Business.Tests
     {
         public class clsTest
         {
+            public clsTestAppointment TestAppointment { get; set; }
             public clsTestDTO TestDTO { get; set; }
 
             public clsTest()
             {
                 this.TestDTO = new clsTestDTO();
                 this.TestDTO.Mode = clsTestDTO.enMode.AddNew;
+                this.TestAppointment = null;
             }
 
             private clsTest(clsTestDTO DTO)
             {
                 this.TestDTO = DTO;
                 this.TestDTO.Mode = clsTestDTO.enMode.Update;
+                TestAppointment = clsTestAppointment.Find(TestDTO.TestAppointmentID);
+                
             }
 
             public static clsTest Find(int TestID)
@@ -59,24 +65,36 @@ namespace DVLD_Business.Tests
 
             private bool _AddNewTest()
             {
-                this.TestDTO.TestID = clsTestsDataAccess.AddNewTest(
-                    this.TestDTO.TestAppointmentID,
-                    this.TestDTO.TestResult,
-                    this.TestDTO.Notes,
-                    this.TestDTO.CreatedByUserID
+                if (TestAppointment == null)
+                {
+                    TestDTO.LastValidationError = "Validation Fail: Test Appointment does not exist.";
+                    return false;
+                }
+
+                TestDTO.TestAppointmentID = TestAppointment.AppointmentDTO.TestAppointmentID;
+
+                // 1. Insert test result into Tests table
+                TestDTO.TestID = clsTestsDataAccess.AddNewTest(
+                    TestDTO.TestAppointmentID,
+                    TestDTO.TestResult,
+                    TestDTO.Notes,
+                    TestDTO.CreatedByUserID
                 );
 
-                if (this.TestDTO.TestID != -1)
+                if (TestDTO.TestID == -1)
+                    return false;
+
+                // 2. Lock the appointment directly without triggering the Save validation pipeline
+                if (!TestAppointment.Lock())
                 {
-                    // SIDE EFFECT CONSTRAINTS: Once a test is written, the underlying appointment must be locked permanently.
-                    clsTestAppointment appointment = clsTestAppointment.Find(this.TestDTO.TestAppointmentID);
-                    if (appointment != null)
-                    {
-                        appointment.AppointmentDTO.IsLocked = true;
-                        return appointment.Save(); // Updates database configuration status to IsLocked = 1
-                    }
+                    TestDTO.LastValidationError = "Test was created, but the appointment could not be locked in the database.";
+                    return false;
                 }
-                return false;
+
+                // Keep in-memory DTO in sync
+                TestAppointment.AppointmentDTO.IsLocked = true;
+
+                return true;
             }
 
             private bool _UpdateTest()
@@ -88,42 +106,90 @@ namespace DVLD_Business.Tests
 
             public bool Save()
             {
-              
-                if (this.TestDTO.TestAppointmentID <= 0 || this.TestDTO.CreatedByUserID <= 0)
+                if (this.TestDTO.CreatedByUserID <= 0)
                 {
-                    this.TestDTO.LastValidationError = "Validation Fail: Required Test Appointment or User tracking associations are completely missing.";
+                    this.TestDTO.LastValidationError =
+                        "Validation Fail: CreatedByUserID is required.";
+
                     return false;
                 }
 
-               
+
                 switch (this.TestDTO.Mode)
                 {
                     case clsTestDTO.enMode.AddNew:
-                        // Guard Rule: An appointment can hold exactly ONE evaluation record. No duplicate entries allowed.
-                        if (clsTestsDataAccess.DoesTestExistForAppointment(this.TestDTO.TestAppointmentID))
+
+                        // The appointment object is required when creating a new test
+                        if (this.TestAppointment == null)
                         {
-                            this.TestDTO.LastValidationError = "Validation Fail: A finalized test evaluation record has already been submitted for this specific appointment index.";
+                            this.TestDTO.LastValidationError =
+                                "Validation Fail: Test Appointment is required.";
+
                             return false;
                         }
+
+                        // Get the ID from the composed appointment
+                        this.TestDTO.TestAppointmentID =
+                            this.TestAppointment.AppointmentDTO.TestAppointmentID;
+
+                        if (this.TestDTO.TestAppointmentID <= 0)
+                        {
+                            this.TestDTO.LastValidationError =
+                                "Validation Fail: Invalid Test Appointment.";
+
+                            return false;
+                        }
+
+
+                        // An appointment can have only one test
+                        if (clsTestsDataAccess.DoesTestExistForAppointment(
+                            this.TestDTO.TestAppointmentID))
+                        {
+                            this.TestDTO.LastValidationError =
+                                "Validation Fail: A test already exists for this appointment.";
+
+                            return false;
+                        }
+
                         return _AddNewTest();
 
+
                     case clsTestDTO.enMode.Update:
-                        clsTest originalRecord = clsTest.Find(this.TestDTO.TestID);
-                        if (originalRecord != null)
+
+                        clsTest originalRecord =  clsTest.Find(this.TestDTO.TestID);
+
+                        if (originalRecord == null)
                         {
-                            
-                            if (originalRecord.TestDTO.TestAppointmentID != this.TestDTO.TestAppointmentID)
-                            {
-                                this.TestDTO.LastValidationError = "Validation Fail: Structural alterations to the historical TestAppointmentID reference are strictly prohibited.";
-                                return false;
-                            }
-                            if (originalRecord.TestDTO.CreatedByUserID != this.TestDTO.CreatedByUserID)
-                            {
-                                this.TestDTO.LastValidationError = "Validation Fail: Modifying the evaluator UserID on an existing test record is prohibited.";
-                                return false; 
-                            }
+                            this.TestDTO.LastValidationError =
+                                "Validation Fail: Test record was not found.";
+
+                            return false;
                         }
+
+
+                        // Appointment relationship cannot be changed
+                        if (originalRecord.TestDTO.TestAppointmentID !=
+                            this.TestDTO.TestAppointmentID)
+                        {
+                            this.TestDTO.LastValidationError =
+                                "Validation Fail: Test Appointment cannot be changed.";
+
+                            return false;
+                        }
+
+
+                        // Creator cannot be changed
+                        if (originalRecord.TestDTO.CreatedByUserID !=
+                            this.TestDTO.CreatedByUserID)
+                        {
+                            this.TestDTO.LastValidationError =
+                                "Validation Fail: CreatedByUserID cannot be changed.";
+
+                            return false;
+                        }
+
                         return _UpdateTest();
+
 
                     default:
                         return false;

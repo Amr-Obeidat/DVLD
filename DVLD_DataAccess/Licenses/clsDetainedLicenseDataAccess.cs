@@ -12,6 +12,7 @@ namespace DVLD_DataAccess.Licenses
     public static class clsDetainedLicensesAttributes
     {
         public const string TableName = "DetainedLicenses";
+        public const string ViewName = "DetainedLicense_View";
 
         public const string colDetainId = "DetainID";
         public const string colLicenseId = "LicenseID";
@@ -139,7 +140,7 @@ namespace DVLD_DataAccess.Licenses
             return isFound;
         }
 
-        // --- 3. CHECK IF LICENSE IS DETAINED ---
+    
         public static bool IsLicenseDetained(int licenseID)
         {
             bool isDetained = false;
@@ -272,7 +273,7 @@ namespace DVLD_DataAccess.Licenses
 
             SqlConnection connection = new SqlConnection(connectionString);
 
-            string query = $"Select * from {clsDetainedLicensesAttributes.TableName} Order by {clsDetainedLicensesAttributes.colDetainId} DEsc";
+            string query = $"Select * from {clsDetainedLicensesAttributes.ViewName} Order by {clsDetainedLicensesAttributes.colIsReleased},{clsDetainedLicensesAttributes.colDetainId} DESC";
 
             SqlCommand command = new SqlCommand(query, connection);
             SqlDataAdapter adapter = new SqlDataAdapter(command);

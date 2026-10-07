@@ -1,4 +1,5 @@
-﻿using DVLD_DataAccess.TestAppointments;
+﻿using DVLD_Business.Applications;
+using DVLD_DataAccess.TestAppointments;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,19 +16,44 @@ namespace DVLD_Business.Tests
         public enMode Mode { get; set; } = enMode.AddNew;
 
         public int TestAppointmentID { get; set; } = -1;
-        public int TestTypeID { get; set; } = -1;
+
+        
+       public clsTestTypesDTO.enTestType TestTypeID { get; set; }
+
         public int LocalDrivingLicenseApplicationID { get; set; } = -1;
         public DateTime AppointmentDate { get; set; } = DateTime.Now;
         public decimal PaidFees { get; set; }
         public int CreatedByUserID { get; set; } = -1;
         public bool IsLocked { get; set; } = false;
+
+        public int RetakeTestApplicationID { get; set; } = -1;
+
+        public clsApplication RetakeTestAppInfo { get; set; } = null;
+
+       
+      
+       
+      
         public string LastValidationError { get; set; } = "";
     }
+
+
 
     public class clsTestAppointment
     {
         public clsTestAppointmentDTO AppointmentDTO { get; set; }
+        public clsApplication RetakeTestAppInfo
+        {
+            get
+            {
+                if (this.AppointmentDTO.RetakeTestApplicationID == -1)
+                    return null;
 
+                return clsApplication.Find(this.AppointmentDTO.RetakeTestApplicationID);
+            }
+        }
+
+       
         public clsTestAppointment()
         {
             this.AppointmentDTO = new clsTestAppointmentDTO();
@@ -54,7 +80,7 @@ namespace DVLD_Business.Tests
                 clsTestAppointmentDTO dto = new clsTestAppointmentDTO
                 {
                     TestAppointmentID = TestAppointmentID,
-                    TestTypeID = TestTypeID,
+                    TestTypeID = (clsTestTypesDTO.enTestType)TestTypeID,
                     LocalDrivingLicenseApplicationID = LocalDrivingLicenseApplicationID,
                     AppointmentDate = AppointmentDate,
                     PaidFees = PaidFees,
@@ -69,7 +95,7 @@ namespace DVLD_Business.Tests
         private bool _AddNewAppointment()
         {
             this.AppointmentDTO.TestAppointmentID = clsTestAppointmentsDataAccess.AddNewAppointment(
-                this.AppointmentDTO.TestTypeID,
+                (short)this.AppointmentDTO.TestTypeID,
                 this.AppointmentDTO.LocalDrivingLicenseApplicationID,
                 this.AppointmentDTO.AppointmentDate,
                 this.AppointmentDTO.PaidFees,
@@ -86,7 +112,29 @@ namespace DVLD_Business.Tests
                 this.AppointmentDTO.TestAppointmentID, this.AppointmentDTO.AppointmentDate, this.AppointmentDTO.IsLocked
             );
         }
-
+        public static int GetTestID(int testAppointmentID)
+        {
+            return clsTestAppointmentsDataAccess.GetTestIDByAppointmentID(testAppointmentID);
+        }
+        public int TestID
+        {
+            get
+            {
+                return clsTestAppointmentsDataAccess.GetTestIDByAppointmentID(this.AppointmentDTO.TestAppointmentID);
+            }
+        }
+        public bool Lock()
+        {
+            return clsTestAppointmentsDataAccess.LockAppointment(this.AppointmentDTO.TestAppointmentID);
+        }
+        public static DateTime GetLastTestAppointmentDate(int localDrivingLicenseApplicationId, clsTestTypesDTO.enTestType testTypeId)
+        {
+            return clsTestAppointmentsDataAccess.GetLastTestAppointmentDate(localDrivingLicenseApplicationId, (short)testTypeId);
+        }
+        public static DateTime GetPreviousTestAppointmentDateExcludingCurrentOne(int localDrivingLicenseApplicationId, clsTestTypesDTO.enTestType testTypeId, int currentAppointmentId)
+        {
+            return clsTestAppointmentsDataAccess.GetPreviousTestAppointmentDateExcludeingCurrentOne(localDrivingLicenseApplicationId, (short)testTypeId, currentAppointmentId);
+        }
         public bool Save()
         {
             // 1. Structural Sanity Check
@@ -101,7 +149,7 @@ namespace DVLD_Business.Tests
             {
                 case clsTestAppointmentDTO.enMode.AddNew:
                     // Security rule: An applicant cannot book a new appointment if they have an active open/unlocked appointment for the same test type
-                    if (clsTestAppointmentsDataAccess.CheckForActiveAppointment(this.AppointmentDTO.LocalDrivingLicenseApplicationID, this.AppointmentDTO.TestTypeID))
+                    if (clsTestAppointmentsDataAccess.CheckForActiveAppointment(this.AppointmentDTO.LocalDrivingLicenseApplicationID, (short) this.AppointmentDTO.TestTypeID))
                     {
                         this.AppointmentDTO.LastValidationError = "Validation Fail: This application already has an active open appointment pending for this test type.";
                         return false;
@@ -138,9 +186,9 @@ namespace DVLD_Business.Tests
             }
         }
 
-        public static DataTable GetApplicationAppointmentsPerTestType(int LocalDrivingLicenseApplicationID, int TestTypeID)
+        public static DataTable GetApplicationAppointmentsPerTestType(int LocalDrivingLicenseApplicationID, clsTestTypesDTO.enTestType TestTypeID)
         {
-            return clsTestAppointmentsDataAccess.GetApplicationAppointmentsPerTestType(LocalDrivingLicenseApplicationID, TestTypeID);
+            return clsTestAppointmentsDataAccess.GetApplicationAppointmentsPerTestType(LocalDrivingLicenseApplicationID, (short)TestTypeID);
         }
     }
 }

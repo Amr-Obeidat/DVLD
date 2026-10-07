@@ -10,12 +10,30 @@ namespace DVLD_Business.Applications
     {
         public enum enMode { Update = 0, AddNew = 1 };
         public enMode Mode { get; set; } = enMode.AddNew;
+
+        public enum enApplicationType
+        {
+            NewDrivingLicense = 1,
+            RenewDrivingLicense = 2,
+            ReplaceLostDrivingLicense = 3,
+            ReplaceDamagedDrivingLicense = 4,
+            ReleaseDetainedDrivingLicsense = 5,
+            NewInternationalLicense = 6,
+            RetakeTest = 7
+        }
         public enum enApplicationStatus : byte
         {
             New = 1,
             Cancelled = 2,
             Completed = 3
         };
+
+
+        public string ApplicantFullName()
+        {
+
+            return clsPerson.Find(this.ApplicantPersonID)?.PersonDTO.FullName() ?? "Unknown Applicant";
+        }
         public int ApplicationID { get; set; } = 0;
         public int ApplicationTypeID { get; set; } = 0;
         public int ApplicantPersonID { get; set; } = 0;
@@ -34,12 +52,16 @@ namespace DVLD_Business.Applications
         // COMPOSITION 
         public clsPerson PersonInfo { get; set; }
         public clsUser CreatedByUserInfo { get; set; }
+        public clsApplicationTypes ApplicationTypeInfo { get; set; }
+
 
         private clsApplication(clsApplicationDTO FilledDTO)
         {
+            
             this.ApplicationDTO = FilledDTO;
             this.PersonInfo = clsPerson.Find(FilledDTO.ApplicantPersonID);
             this.CreatedByUserInfo = clsUser.Find(FilledDTO.CreatedByUserID);
+            this.ApplicationTypeInfo = clsApplicationTypes.Find(FilledDTO.ApplicationTypeID);
 
         }
 
@@ -49,6 +71,7 @@ namespace DVLD_Business.Applications
             this.ApplicationDTO.Mode = clsApplicationDTO.enMode.AddNew;
             this.PersonInfo = null;
             this.CreatedByUserInfo = null;
+            this.ApplicationTypeInfo = null;
         }
 
         public static clsApplication Find(int ApplicationId)
@@ -111,7 +134,25 @@ namespace DVLD_Business.Applications
         }
 
        
-
+        public static bool DoesPersonHaveActiveApplication(int PersonId, int ApplicationTypeID)
+        {
+            return clsApplicationsDataAccess.DoesPersonHaveActiveApplication(PersonId, ApplicationTypeID);
+        }
+      
+      
+        public static int GetActiveApplicationForLicenseClass(int PersonId, int ApplicationTypeID, int LicenseClassID)
+        {
+            return clsApplicationsDataAccess.GetActiveApplicationIDForLicenseClass(PersonId, ApplicationTypeID,LicenseClassID );
+        }
+        
+        public static int GetActiveApplicationID(int PersonId, int ApplicationTypeID)
+        {
+            return clsApplicationsDataAccess.GetActiveApplicationID(PersonId, ApplicationTypeID);
+        }
+        public static bool DoesPersonHaveActiveApplicationForLicenseClass(int PersonId, int ApplicationTypeID, int LicenseClassID)
+        {
+            return clsApplicationsDataAccess.DoesPersonHaveActiveApplicationForLicenseClass(PersonId, ApplicationTypeID, LicenseClassID);
+        }
         public static DataTable GetAllApplications()
         {
             return clsApplicationsDataAccess.GetAllApplications();
@@ -139,6 +180,8 @@ namespace DVLD_Business.Applications
             return false;
         }
 
+
+
         public bool Cancel()
         {
             if (this.ApplicationDTO.ApplicationStatus != 1) 
@@ -161,6 +204,7 @@ namespace DVLD_Business.Applications
             return _UpdateStatus(3); // 3 = Completed
         }
 
+      
         public bool Save()
         {
             
@@ -191,11 +235,7 @@ namespace DVLD_Business.Applications
             }
 
 
-            int actualApplicationId = clsApplicationsDataAccess.GetActiveApplicationID(
-                this.ApplicationDTO.ApplicantPersonID,
-                this.ApplicationDTO.ApplicationTypeID
-            );
-
+            int actualApplicationId = GetActiveApplicationID(this.ApplicationDTO.ApplicantPersonID, this.ApplicationDTO.ApplicationTypeID);
             if (actualApplicationId != -1)
             {
                 this.ApplicationDTO.LastValidationError = "Validation Fail: A pending application of this type already exists for this person.";

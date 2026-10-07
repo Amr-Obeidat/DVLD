@@ -19,7 +19,9 @@ namespace DVLD_DataAccess.Driver
             static public string colPersonId = "PersonID";
             static public string colCreatedBy = "CreatedByUserID";
             static public string colCreatedDate = "CreatedDate";
+            static public string colFullName = "FullName";
             static public string TableName = "DVLD.dbo.Drivers";
+            static public string ViewTable = "Drivers_View";
         }
 
         public static bool GetDriverInfoByID(int DriverID, ref int PersonID, ref int CreatedByUserID, ref DateTime CreatedDate)
@@ -197,7 +199,7 @@ namespace DVLD_DataAccess.Driver
         {
             DataTable dt = new DataTable();
             SqlConnection connection = new SqlConnection(connectionstring);
-            string query = $"SELECT * FROM {clsDriversAttributes.TableName} ORDER BY {clsDriversAttributes.colDriverId} DESC";
+            string query = $"SELECT * FROM {clsDriversAttributes.ViewTable} ORDER BY {clsDriversAttributes.colFullName}";
             SqlCommand command = new SqlCommand(query, connection);
             SqlDataAdapter adapter = new SqlDataAdapter(command);
 

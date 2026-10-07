@@ -15,10 +15,10 @@ namespace DVLD.Tests
     {
 
 
-        private short _TestTypeId;    
-        clsTestTypes _TestType = new clsTestTypes();    
+        private clsTestTypesDTO.enTestType _TestTypeId;
+        clsTestTypes _TestType = new clsTestTypes();
 
-        public frmEditTestType(short TestTypeId)
+        public frmEditTestType(clsTestTypesDTO.enTestType TestTypeId)
         {
             InitializeComponent();
             _TestTypeId = TestTypeId;

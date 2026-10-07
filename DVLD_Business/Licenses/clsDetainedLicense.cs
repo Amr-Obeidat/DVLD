@@ -29,7 +29,6 @@ namespace DVLD_Business.Licenses
     {
         public clsDetainedLicenseDTO DetainedLicenseDTO { get; set; }
 
-        // --- 1. CONSTRUCTORS ---
         public clsDetainedLicense()
         {
             this.DetainedLicenseDTO = new clsDetainedLicenseDTO();
@@ -42,7 +41,7 @@ namespace DVLD_Business.Licenses
             this.DetainedLicenseDTO.Mode = clsDetainedLicenseDTO.enMode.Update;
         }
 
-        // --- 2. FIND METHODS ---
+ 
         public static clsDetainedLicense FindByDetainID(int detainID)
         {
             if (detainID <= 0) return null;

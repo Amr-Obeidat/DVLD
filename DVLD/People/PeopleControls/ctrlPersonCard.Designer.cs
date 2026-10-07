@@ -123,7 +123,7 @@
             // llEditPersonInfo
             // 
             this.llEditPersonInfo.AutoSize = true;
-            this.llEditPersonInfo.Location = new System.Drawing.Point(721, 32);
+            this.llEditPersonInfo.Location = new System.Drawing.Point(708, 32);
             this.llEditPersonInfo.Name = "llEditPersonInfo";
             this.llEditPersonInfo.Size = new System.Drawing.Size(137, 22);
             this.llEditPersonInfo.TabIndex = 37;

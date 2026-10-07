@@ -22,7 +22,7 @@ namespace DVLD_Business.Drivers
     {
         public clsDriverDTO DriverDTO { get; set; }
 
-        // Object Composition: Provides direct rich-domain binding to the parent person's data folder
+        // Object Composition
         public clsPerson PersonInfo { get; set; }
 
         public clsDriver()
@@ -37,7 +37,7 @@ namespace DVLD_Business.Drivers
             this.DriverDTO = DTO;
             this.DriverDTO.Mode = clsDriverDTO.enMode.Update;
 
-            // Automatically hydrate object composition on load
+          
             this.PersonInfo = clsPerson.Find(DTO.PersonID);
         }
 

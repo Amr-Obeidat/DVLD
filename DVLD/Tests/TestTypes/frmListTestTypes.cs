@@ -90,7 +90,7 @@ namespace DVLD.Tests
 
         private void editTestTypeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           short TestTypeId = Convert.ToInt16(dgvTestTypes.SelectedRows[0].Cells[clsTestTypeAttributes.colTestTypeId].Value);
+           clsTestTypesDTO.enTestType TestTypeId = (clsTestTypesDTO.enTestType)Convert.ToInt16(dgvTestTypes.SelectedRows[0].Cells[clsTestTypeAttributes.colTestTypeId].Value);
             frmEditTestType frm = new frmEditTestType(TestTypeId);    
             if(frm.ShowDialog() == DialogResult.OK)
             {

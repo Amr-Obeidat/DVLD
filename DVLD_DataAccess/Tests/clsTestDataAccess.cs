@@ -68,7 +68,9 @@ namespace DVLD_DataAccess.Tests
             int NewTestID = -1;
             SqlConnection connection = new SqlConnection(connectionstring);
             string query = $"INSERT INTO {clsTestsAttributes.TableName} ({clsTestsAttributes.colTestAppointmentId}, {clsTestsAttributes.colTestResult}, {clsTestsAttributes.colNotes}, {clsTestsAttributes.colCreatedBy}) " +
-                           $"VALUES (@TestAppointmentID, @TestResult, @Notes, @CreatedByUserID); " +
+                           $"VALUES (@TestAppointmentID, @TestResult, @Notes, @CreatedByUserID);" +
+                           $"Update TestAppointments " +
+                           $"Set IsLocked=1 where TestAppointmentId=@TestAppointmentID " +
                            $"SELECT SCOPE_IDENTITY();";
             SqlCommand command = new SqlCommand(query, connection);
 

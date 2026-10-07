@@ -28,7 +28,7 @@ public class TestAppointmentsTestcs
 
         clsTestAppointment newAppointment = new clsTestAppointment();
         newAppointment.AppointmentDTO.LocalDrivingLicenseApplicationID = targetLocalAppId;
-        newAppointment.AppointmentDTO.TestTypeID = testTypeId;
+        newAppointment.AppointmentDTO.TestTypeID = (clsTestTypesDTO.enTestType)testTypeId;
         newAppointment.AppointmentDTO.AppointmentDate = DateTime.Now.AddDays(2); // Scheduled for 2 days from now
         newAppointment.AppointmentDTO.PaidFees = 10.00m;
         newAppointment.AppointmentDTO.CreatedByUserID = 1;
@@ -52,7 +52,7 @@ public class TestAppointmentsTestcs
 
         clsTestAppointment duplicateAttempt = new clsTestAppointment();
         duplicateAttempt.AppointmentDTO.LocalDrivingLicenseApplicationID = activeLocalAppId;
-        duplicateAttempt.AppointmentDTO.TestTypeID = testTypeId;
+        duplicateAttempt.AppointmentDTO.TestTypeID = (clsTestTypesDTO.enTestType)testTypeId;
         duplicateAttempt.AppointmentDTO.CreatedByUserID = 1;
         duplicateAttempt.AppointmentDTO.PaidFees = 10.00m;
         duplicateAttempt.AppointmentDTO.IsLocked = false;
@@ -140,7 +140,7 @@ public class TestAppointmentsTestcs
         int appId = 31;
         int testTypeId = 2;
 
-        DataTable dt = clsTestAppointment.GetApplicationAppointmentsPerTestType(appId, testTypeId);
+        DataTable dt = clsTestAppointment.GetApplicationAppointmentsPerTestType(appId, (clsTestTypesDTO.enTestType)testTypeId);
 
         Assert.IsNotNull(dt, "Data access returned a null reference datatable.");
         Console.WriteLine($"Total appointments tracked for App {appId} under Test Type {testTypeId}: {dt.Rows.Count}");
