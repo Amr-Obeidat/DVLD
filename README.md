@@ -207,5 +207,8 @@ Run `DVLD_Database.sql` again in SSMS and make sure the script was executed agai
 
 Make sure the `DVLD` project is selected as the **Startup Project** and that all required NuGet packages and project dependencies have been restored.
 
+
+/// This project was made for educational , practical purposes so it can't be really used of personal use .
+
 this is the initial version of it , i might be adding features , hashing , encrypting in the future..
 
